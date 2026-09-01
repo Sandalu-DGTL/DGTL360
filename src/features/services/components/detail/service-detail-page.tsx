@@ -1,9 +1,11 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { SiteFooter } from '../../../../components/layout/site-footer';
+import type { CSSProperties } from 'react';
 import { EnquirySection } from '../../../enquiry';
 import { services } from '../../../../content/local/services';
 import type { Service } from '../../types/service.types';
+import { ServiceDetailFooter } from './service-detail-footer';
+import { ServiceImageCarousel } from './service-image-carousel.client';
+import { ServiceRevealController } from './service-reveal-controller.client';
 import styles from '../../service-detail.module.css';
 
 export function ServiceDetailPage({ service }: { service: Service }) {
@@ -12,7 +14,8 @@ export function ServiceDetailPage({ service }: { service: Service }) {
   const next = services[(currentIndex + 1) % services.length];
 
   return (
-    <div className={styles.page} style={{ '--service-accent': service.accent } as React.CSSProperties}>
+    <div className={styles.page} style={{ '--service-accent': service.accent } as CSSProperties}>
+      <ServiceRevealController />
       <header className={styles.header}>
         <Link href="/">DGTL 360</Link>
         <nav aria-label="Service breadcrumb">
@@ -25,20 +28,20 @@ export function ServiceDetailPage({ service }: { service: Service }) {
         <div className={styles.content}>
           <section className={styles.hero}>
             <div className={styles.heroCopy}>
-              <p>{String(service.order).padStart(2, '0')} · {service.tagline.toUpperCase()}</p>
-              <h1>{service.label}</h1>
-              <span>{service.detailDescription}</span>
+              <h1 data-service-reveal style={{ '--reveal-delay': '0ms' } as CSSProperties}>
+                {service.label}
+              </h1>
+              <p data-service-reveal style={{ '--reveal-delay': '100ms' } as CSSProperties}>
+                {service.detailDescription}
+              </p>
             </div>
-            <div className={styles.heroImage}>
-              <Image
-                src={service.image}
-                alt={`${service.label} visual study`}
-                fill
-                sizes="(max-width: 1000px) 100vw, 48vw"
-                style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
-                preload
-              />
-              <span>{String(service.order).padStart(2, '0')} · {service.tagline}</span>
+            <div
+              className={styles.carouselReveal}
+              data-service-reveal
+              data-reveal-kind="carousel"
+              style={{ '--reveal-delay': '120ms' } as CSSProperties}
+            >
+              <ServiceImageCarousel currentSlug={service.slug} accent={service.accent} />
             </div>
           </section>
 
@@ -47,7 +50,7 @@ export function ServiceDetailPage({ service }: { service: Service }) {
               <details key={section.title}>
                 <summary>
                   <span>{String(index + 1).padStart(2, '0')}</span>
-                  <span className={styles.sectionTitle}>{section.title}</span>
+                  <h2 className={styles.sectionTitle}>{section.title}</h2>
                   <i aria-hidden="true">+</i>
                 </summary>
                 <div className={styles.sectionBody}>
@@ -58,8 +61,8 @@ export function ServiceDetailPage({ service }: { service: Service }) {
                     <ul>
                       {section.items.map((item) => (
                         <li key={item.title}>
-                          <strong>{item.title}</strong>
-                          {item.description ? <span>{item.description}</span> : null}
+                          <em>{item.title}</em>
+                          {item.description ? <> — {item.description}</> : null}
                         </li>
                       ))}
                     </ul>
@@ -79,16 +82,13 @@ export function ServiceDetailPage({ service }: { service: Service }) {
               <strong>{next.label}</strong>
             </Link>
           </nav>
-          <Link className={styles.allServices} href="/#top">
-            BACK TO ALL SERVICES ↑
-          </Link>
         </div>
 
         <aside className={styles.contact}>
           <EnquirySection compact />
         </aside>
       </main>
-      <SiteFooter />
+      <ServiceDetailFooter />
     </div>
   );
 }
