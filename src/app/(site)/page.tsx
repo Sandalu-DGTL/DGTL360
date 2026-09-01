@@ -13,7 +13,7 @@ export default function HomePage() {
         Skip to content
       </a>
       <CreativeNav />
-      <main id="main-content">
+      <main id="main-content" className="home-scroll-snap">
         <HeroSection />
         <WhoWeAreSection />
         <AttitudeSection />

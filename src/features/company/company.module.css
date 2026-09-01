@@ -36,6 +36,16 @@
   max-width: 12ch;
 }
 
+@media (min-width: 901px) and (min-height: 800px) {
+  .statement {
+    padding-block: clamp(6rem, 11vh, 10rem);
+  }
+
+  .statement h2 {
+    font-size: clamp(4rem, min(8.3vw, 11vh), 9.6rem);
+  }
+}
+
 @media (max-width: 700px) {
   .statement {
     min-height: auto;

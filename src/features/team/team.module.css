@@ -139,6 +139,23 @@
   line-height: 1.5;
 }
 
+@media (min-width: 901px) and (min-height: 800px) {
+  .section {
+    padding-block: clamp(5rem, 9vh, 8rem) clamp(2.5rem, 5vh, 4rem);
+  }
+
+  .profile,
+  .intro {
+    min-height: min(72vh, 720px);
+  }
+
+  .portrait,
+  .portrait:nth-child(5n + 1),
+  .portrait:nth-child(5n + 4) {
+    min-height: clamp(130px, 17vh, 230px);
+  }
+}
+
 @media (max-width: 900px) {
   .section {
     grid-template-columns: 1fr;

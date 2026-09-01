@@ -71,6 +71,38 @@ textarea {
   transform: translateY(0);
 }
 
+@media (min-width: 901px) and (min-height: 800px) {
+  html:has(.home-scroll-snap) {
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-y: none;
+  }
+
+  .home-scroll-snap > #top,
+  .home-scroll-snap > #who-we-are,
+  .home-scroll-snap > #our-attitude,
+  .home-scroll-snap > #team,
+  .home-scroll-snap > #enquiry,
+  .home-scroll-snap > #dgtl-field,
+  #site-footer {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .home-scroll-snap > #who-we-are,
+  .home-scroll-snap > #our-attitude,
+  .home-scroll-snap > #team,
+  .home-scroll-snap > #enquiry {
+    width: 100%;
+    height: 100svh;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+
+  #site-footer {
+    scroll-snap-align: end;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

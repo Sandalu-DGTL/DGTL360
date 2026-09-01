@@ -212,6 +212,37 @@
   font-size: 9px;
 }
 
+@media (min-width: 901px) and (min-height: 800px) {
+  .section:not(.compact) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(4rem, 7vh, 6rem);
+  }
+
+  .section:not(.compact) h2 {
+    margin-block: clamp(.8rem, 1.8vh, 1.4rem);
+    font-size: clamp(3.4rem, min(7vw, 9vh), 7.8rem);
+  }
+
+  .section:not(.compact) .form {
+    margin-top: clamp(1.5rem, 3vh, 2.5rem);
+    gap-block: clamp(.85rem, 1.8vh, 1.4rem);
+  }
+
+  .section:not(.compact) .form textarea {
+    min-height: clamp(4rem, 8vh, 6rem);
+  }
+
+  .section:not(.compact) .form button {
+    min-height: clamp(3.8rem, 7vh, 4.6rem);
+  }
+
+  .section:not(.compact) .email {
+    margin-top: clamp(1.25rem, 2.5vh, 2rem);
+  }
+}
+
 @media (max-width: 700px) {
   .section h2 {
     font-size: clamp(3.3rem, 16vw, 5.8rem);
