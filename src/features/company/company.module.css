@@ -1,0 +1,53 @@
+.statement {
+  min-height: 100svh;
+  padding: clamp(7rem, 12vw, 12rem) max(var(--page-gutter), calc((100vw - var(--content-max)) / 2));
+  background:
+    radial-gradient(circle at 60% 38%, rgba(255,255,255,.035), transparent 32%),
+    #06080b;
+}
+
+.kicker {
+  margin: 0 0 2.2rem;
+  font: 700 0.7rem/1 var(--font-mono), monospace;
+  letter-spacing: 0.11em;
+}
+
+.statement h2 {
+  max-width: 13ch;
+  margin: 0;
+  font: 400 clamp(4rem, 8.3vw, 9.6rem)/0.82 var(--font-display);
+  letter-spacing: -0.07em;
+}
+
+.body {
+  max-width: 42rem;
+  margin: 2rem 0 0;
+  color: var(--color-muted);
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(1rem, 1.45vw, 1.55rem);
+  line-height: 1.5;
+}
+
+.attitude {
+  min-height: 92svh;
+}
+
+.attitude h2 {
+  max-width: 12ch;
+}
+
+@media (max-width: 700px) {
+  .statement {
+    min-height: auto;
+    padding-block: 7rem;
+  }
+
+  .statement h2 {
+    font-size: clamp(3.2rem, 16vw, 5.5rem);
+    line-height: 0.88;
+  }
+
+  .body {
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,71 @@
+.header {
+  position: fixed;
+  z-index: 80;
+  inset: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 72px;
+  padding: 0 var(--page-gutter);
+  color: #fff;
+  font: 700 0.72rem/1 var(--font-mono), monospace;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+.header a {
+  pointer-events: auto;
+}
+
+.brand {
+  justify-self: start;
+}
+
+.location {
+  margin: 0;
+  justify-self: center;
+}
+
+.links {
+  display: flex;
+  gap: clamp(1.2rem, 2vw, 2.4rem);
+  justify-self: end;
+}
+
+.links a {
+  position: relative;
+}
+
+.links a::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.35rem;
+  left: 0;
+  height: 1px;
+  content: '';
+  transform: scaleX(0);
+  transform-origin: right;
+  background: currentColor;
+  transition: transform 180ms ease;
+}
+
+.links a:hover::after,
+.links a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@media (max-width: 700px) {
+  .header {
+    grid-template-columns: 1fr auto;
+    min-height: 62px;
+  }
+
+  .location {
+    display: none;
+  }
+
+  .links a:first-child {
+    display: none;
+  }
+}
