@@ -40,7 +40,7 @@ export function HeroSection() {
 
       <div className={styles.field} aria-label="Scroll through DGTL 360 services">
         <p className={styles.scrollHint}>SCROLL SERVICES ↓</p>
-        <div className={styles.serviceRail} data-native-scroll>
+        <div className={styles.serviceRail}>
           {services.map((service, index) => (
             <article className={styles.card} key={service.slug}>
             <Image

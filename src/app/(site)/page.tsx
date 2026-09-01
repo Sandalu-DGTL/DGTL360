@@ -3,7 +3,7 @@ import { AttitudeSection, WhoWeAreSection } from '../../features/company';
 import { EnquirySection } from '../../features/enquiry';
 import { HeroSection } from '../../features/hero';
 import { DgtlFieldSection } from '../../features/identity';
-import { CreativeNav, HomeScrollController } from '../../features/navigation';
+import { CreativeNav } from '../../features/navigation';
 import { TeamSection } from '../../features/team';
 
 export default function HomePage() {
@@ -12,7 +12,6 @@ export default function HomePage() {
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <HomeScrollController />
       <CreativeNav />
       <main id="main-content" className="home-scroll-snap">
         <HeroSection />
