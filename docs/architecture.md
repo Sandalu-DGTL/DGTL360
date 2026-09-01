@@ -29,10 +29,11 @@ dgtl-360/
 │       ├── navigation/           # Global navigation
 │       ├── services/             # Homepage cards and detail-page template
 │       └── team/                 # Interactive team/profile system
-├── .openai/hosting.json          # Sites project binding
+├── next.config.ts                # Next.js configuration
 ├── package.json
+├── postcss.config.mjs            # Tailwind/PostCSS integration
 ├── tsconfig.json
-└── vite.config.ts
+└── package-lock.json             # Reproducible npm dependencies
 ```
 
 ## Rules for future changes
@@ -44,6 +45,7 @@ dgtl-360/
 5. Add client rendering only to the smallest interactive component that needs browser state.
 6. Use direct imports across server/client boundaries. Avoid barrels that mix client and server components.
 7. Store secrets in deployment environment variables; never commit `.env` files.
+8. Keep Vercel’s framework preset on Next.js and deploy production from `main`.
 
 ## Scaling path
 

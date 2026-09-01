@@ -2,6 +2,19 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
+const deploymentHost =
+  process.env.SITE_URL ??
+  process.env.VERCEL_URL ??
+  process.env.VERCEL_PROJECT_PRODUCTION_URL;
+
+const metadataBase = new URL(
+  deploymentHost
+    ? deploymentHost.startsWith('http')
+      ? deploymentHost
+      : `https://${deploymentHost}`
+    : 'http://localhost:3000',
+);
+
 const interfaceFont = Geist({
   variable: '--font-interface',
   subsets: ['latin'],
@@ -13,6 +26,7 @@ const monoFont = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase,
   title: {
     default: 'DGTL 360 — Make the thing. Make it land. Make it work.',
     template: '%s — DGTL 360',
