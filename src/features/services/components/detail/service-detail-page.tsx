@@ -16,7 +16,7 @@ export function ServiceDetailPage({ service }: { service: Service }) {
       <header className={styles.header}>
         <Link href="/">DGTL 360</Link>
         <nav aria-label="Service breadcrumb">
-          <Link href="/">← HOME</Link>
+          <Link href="/#top">← SERVICES</Link>
           <span>{String(service.order).padStart(2, '0')} / {service.label.toUpperCase()}</span>
         </nav>
       </header>
@@ -47,10 +47,24 @@ export function ServiceDetailPage({ service }: { service: Service }) {
               <details key={section.title} open={index === 0}>
                 <summary>
                   <span>{String(index + 1).padStart(2, '0')}</span>
-                  <h2>{section.title}</h2>
+                  <span className={styles.sectionTitle}>{section.title}</span>
                   <i aria-hidden="true">+</i>
                 </summary>
-                <p>{section.body}</p>
+                <div className={styles.sectionBody}>
+                  {section.body?.split('\n\n').map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                  {section.items && section.items.length > 0 ? (
+                    <ul>
+                      {section.items.map((item) => (
+                        <li key={item.title}>
+                          <strong>{item.title}</strong>
+                          {item.description ? <span>{item.description}</span> : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
               </details>
             ))}
           </section>
@@ -65,6 +79,9 @@ export function ServiceDetailPage({ service }: { service: Service }) {
               <strong>{next.label}</strong>
             </Link>
           </nav>
+          <Link className={styles.allServices} href="/#top">
+            BACK TO ALL SERVICES ↑
+          </Link>
         </div>
 
         <aside className={styles.contact}>

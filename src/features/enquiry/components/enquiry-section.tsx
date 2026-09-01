@@ -3,13 +3,14 @@ import styles from '../enquiry.module.css';
 export function EnquirySection({ compact = false }: { compact?: boolean }) {
   return (
     <section className={`${styles.section} ${compact ? styles.compact : ''}`} id={compact ? undefined : 'enquiry'} aria-labelledby={compact ? 'service-enquiry-title' : 'enquiry-title'}>
-      <p className={styles.kicker}>START AN ENQUIRY</p>
+      <p className={styles.kicker}>{compact ? 'CONTACT US' : 'START AN ENQUIRY'}</p>
       <h2 id={compact ? 'service-enquiry-title' : 'enquiry-title'}>
         {compact ? 'Let’s make your next move clear.' : <>Tell us the problem. We’ll route the next useful step.</>}
       </h2>
       <p className={styles.copy}>
-        Tell us what you are trying to make, fix or move forward. We’ll bring in the right
-        people, ask the useful questions and come back with a practical next step.
+        {compact
+          ? 'Tell us what you are building, what feels stuck, or where you need traction. We’ll route the right DGTL 360 crew and the next useful step.'
+          : 'Tell us what you are trying to make, fix or move forward. We’ll bring in the right people, ask the useful questions and come back with a practical next step.'}
       </p>
       <form className={styles.form} action="mailto:hello@dgtl.lk" method="post" encType="text/plain">
         <label>

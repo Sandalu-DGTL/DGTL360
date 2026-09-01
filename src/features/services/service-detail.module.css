@@ -124,15 +124,15 @@
   font: 700 0.65rem/1 var(--font-mono), monospace;
 }
 
-.sections h2 {
+.sectionTitle {
   margin: 0;
   font: 400 clamp(2.4rem, 4.5vw, 5rem)/0.9 var(--font-display);
   letter-spacing: -0.055em;
   transition: color 170ms ease, transform 170ms ease;
 }
 
-.sections summary:hover h2,
-.sections summary:focus-visible h2 {
+.sections summary:hover .sectionTitle,
+.sections summary:focus-visible .sectionTitle {
   color: var(--service-accent);
   transform: translateX(4px);
 }
@@ -153,12 +153,44 @@
   background: var(--service-accent);
 }
 
-.sections details > p {
+.sectionBody {
   max-width: 45rem;
   margin: -0.5rem 0 2.5rem 3rem;
+}
+
+.sectionBody p {
+  margin: 0 0 1.25rem;
   color: rgba(255,255,255,.7);
   font-size: 1rem;
   line-height: 1.7;
+}
+
+.sectionBody ul {
+  display: grid;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  border-top: 1px solid rgba(255,255,255,.14);
+  list-style: none;
+}
+
+.sectionBody li {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.42fr) 1fr;
+  gap: 1.5rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.14);
+}
+
+.sectionBody strong {
+  color: var(--service-accent);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.sectionBody li > span {
+  color: rgba(255,255,255,.68);
+  font-size: 0.92rem;
+  line-height: 1.55;
 }
 
 .pagination {
@@ -188,6 +220,21 @@
 
 .pagination a:hover strong,
 .pagination a:focus-visible strong {
+  color: var(--service-accent);
+}
+
+.allServices {
+  display: block;
+  padding: 1.35rem clamp(2rem, 4vw, 5rem);
+  border-top: 1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.68);
+  font: 700 0.66rem/1 var(--font-mono), monospace;
+  letter-spacing: 0.09em;
+  text-align: center;
+}
+
+.allServices:hover,
+.allServices:focus-visible {
   color: var(--service-accent);
 }
 
@@ -235,8 +282,13 @@
     min-height: 96px;
   }
 
-  .sections details > p {
+  .sectionBody {
     margin-left: 0;
+  }
+
+  .sectionBody li {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
   }
 
   .pagination {

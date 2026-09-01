@@ -1,6 +1,10 @@
 export type ServiceSection = {
   title: string;
-  body: string;
+  body?: string;
+  items?: Array<{
+    title: string;
+    description?: string;
+  }>;
 };
 
 export type Service = {
