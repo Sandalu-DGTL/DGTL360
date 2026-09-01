@@ -4,7 +4,6 @@ import { EnquirySection } from '../../features/enquiry';
 import { HeroSection } from '../../features/hero';
 import { DgtlFieldSection } from '../../features/identity';
 import { CreativeNav } from '../../features/navigation';
-import { ServicesSection } from '../../features/services/components/homepage/services-section';
 import { TeamSection } from '../../features/team';
 
 export default function HomePage() {
@@ -16,7 +15,6 @@ export default function HomePage() {
       <CreativeNav />
       <main id="main-content">
         <HeroSection />
-        <ServicesSection />
         <WhoWeAreSection />
         <AttitudeSection />
         <TeamSection />

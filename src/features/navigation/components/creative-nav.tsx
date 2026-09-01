@@ -8,7 +8,7 @@ export function CreativeNav() {
       </a>
       <p className={styles.location}>COLOMBO + ANYWHERE</p>
       <nav className={styles.links} aria-label="Primary navigation">
-        <a href="#services">SERVICES</a>
+        <a href="/services/production">SERVICES</a>
         <a href="#enquiry">SAY HELLO</a>
       </nav>
     </header>

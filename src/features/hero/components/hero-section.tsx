@@ -50,7 +50,7 @@ export function HeroSection() {
 
         <div className={styles.copyFooter}>
           <a href="#enquiry">TELL US THE PROBLEM ↗</a>
-          <a href="#services">SCROLL THE WORK ↓</a>
+          <a href="#who-we-are">SCROLL THE STORY ↓</a>
         </div>
       </div>
 

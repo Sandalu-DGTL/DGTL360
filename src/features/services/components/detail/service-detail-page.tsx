@@ -16,7 +16,7 @@ export function ServiceDetailPage({ service }: { service: Service }) {
       <header className={styles.header}>
         <Link href="/">DGTL 360</Link>
         <nav aria-label="Service breadcrumb">
-          <Link href="/#services">← SERVICES</Link>
+          <Link href="/">← HOME</Link>
           <span>{String(service.order).padStart(2, '0')} / {service.label.toUpperCase()}</span>
         </nav>
       </header>
