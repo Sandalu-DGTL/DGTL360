@@ -8,6 +8,58 @@
     #000;
 }
 
+.mycelialBackground {
+  --cursor-x: 68%;
+  --cursor-y: 42%;
+  --video-x: 0%;
+  --video-y: 0%;
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #020504;
+}
+
+.mycelialBackground::after {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.86) 0%, rgba(0, 0, 0, 0.5) 44%, rgba(0, 0, 0, 0.2) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.56));
+  content: '';
+}
+
+.mycelialVideo {
+  position: absolute;
+  top: -6%;
+  left: -6%;
+  width: 112%;
+  height: 112%;
+  opacity: 0.1;
+  object-fit: cover;
+  filter: grayscale(0.25) saturate(0.82) contrast(1.22);
+  transform: translate3d(var(--video-x), var(--video-y), 0) scale(1.07);
+  transition: opacity 480ms ease, filter 480ms ease, transform 220ms ease-out;
+  mask-image: radial-gradient(
+    circle 34rem at var(--cursor-x) var(--cursor-y),
+    #000 0%,
+    rgba(0, 0, 0, 0.94) 34%,
+    rgba(0, 0, 0, 0.18) 72%,
+    transparent 100%
+  );
+}
+
+.mycelialBackground[data-active='true'] .mycelialVideo {
+  opacity: 0.5;
+  filter: grayscale(0.08) saturate(1.08) contrast(1.14);
+}
+
+.mycelialBackground[data-active='touch'] .mycelialVideo {
+  opacity: 0.28;
+  mask-image: linear-gradient(#000, #000);
+}
+
 .gridTexture {
   position: absolute;
   z-index: -1;
@@ -258,6 +310,15 @@
   .topCard,
   .bottomCard {
     right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mycelialVideo {
+    opacity: 0.14;
+    transform: scale(1.04);
+    transition: none;
+    mask-image: linear-gradient(#000, #000);
   }
 }
 

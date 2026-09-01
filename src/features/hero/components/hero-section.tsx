@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { CursorVideoBackground } from './cursor-video-background.client';
 import styles from '../hero.module.css';
 
 const supportingCards = [
@@ -22,6 +23,7 @@ const supportingCards = [
 export function HeroSection() {
   return (
     <section className={styles.hero} id="top" aria-labelledby="hero-title">
+      <CursorVideoBackground />
       <div className={styles.gridTexture} aria-hidden="true" />
       <div className={styles.copy}>
         <p className={styles.eyebrow}>ONE CREW · EIGHT DOORS</p>
