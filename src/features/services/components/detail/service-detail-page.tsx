@@ -44,7 +44,7 @@ export function ServiceDetailPage({ service }: { service: Service }) {
 
           <section className={styles.sections} aria-label={`${service.label} capabilities`}>
             {service.sections.map((section, index) => (
-              <details key={section.title} open={index === 0}>
+              <details key={section.title}>
                 <summary>
                   <span>{String(index + 1).padStart(2, '0')}</span>
                   <span className={styles.sectionTitle}>{section.title}</span>
