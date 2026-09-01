@@ -300,6 +300,7 @@
 .sections details:focus-within > .sectionBody,
 .sections details[open] > .sectionBody {
   display: block;
+  animation: sectionDescriptionIn 220ms ease both;
 }
 
 .sectionBody p {
@@ -334,6 +335,17 @@
 .sectionBody em {
   color: #fff;
   font: 600 1.08em/1.4 var(--font-display);
+}
+
+@keyframes sectionDescriptionIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .pagination {
@@ -503,6 +515,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sectionBody {
+    animation: none !important;
+  }
+
   .page [data-service-reveal],
   .page [data-service-reveal][data-reveal-kind='carousel'] {
     opacity: 1;
