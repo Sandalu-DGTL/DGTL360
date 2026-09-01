@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styles from './site-footer.module.css';
 
 export function SiteFooter() {
@@ -16,7 +17,7 @@ export function SiteFooter() {
       </div>
       <div className={styles.links}>
         <nav aria-label="Footer navigation">
-          <a href="/services/production">Services</a>
+          <Link href="/services/production">Services</Link>
           <a href="#who-we-are">Integrated solutions</a>
           <a href="#our-attitude">Our attitude</a>
           <a href="#team">Team</a>

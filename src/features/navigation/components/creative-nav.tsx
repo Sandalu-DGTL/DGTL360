@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styles from '../navigation.module.css';
 
 export function CreativeNav() {
@@ -8,7 +9,7 @@ export function CreativeNav() {
       </a>
       <p className={styles.location}>COLOMBO + ANYWHERE</p>
       <nav className={styles.links} aria-label="Primary navigation">
-        <a href="/services/production">SERVICES</a>
+        <Link href="/services/production">SERVICES</Link>
         <a href="#enquiry">SAY HELLO</a>
       </nav>
     </header>

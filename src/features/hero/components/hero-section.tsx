@@ -1,24 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { services } from '../../../content/local/services';
 import { CursorVideoBackground } from './cursor-video-background.client';
 import styles from '../hero.module.css';
-
-const supportingCards = [
-  {
-    number: '07',
-    label: 'EVENTS & EXPERIENCES',
-    copy: 'Good energy. Tight run sheet.',
-    image: '/assets/services/events-experiences-v01.webp',
-    accent: '#8d33ff',
-  },
-  {
-    number: '01',
-    label: 'PRODUCTION',
-    copy: 'Sound, film and motion that earn the replay.',
-    image: '/assets/services/production-v01.webp',
-    accent: '#ff5c35',
-  },
-];
 
 export function HeroSection() {
   return (
@@ -54,50 +38,33 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className={styles.field} aria-label="Selected DGTL services">
-        <article className={`${styles.card} ${styles.primaryCard}`}>
-          <Image
-            src="/assets/services/agentic-systems-v01.webp"
-            alt="DGTL 360 Agentic Systems visual study"
-            fill
-            sizes="(max-width: 900px) 86vw, 38vw"
-            style={{ objectFit: 'cover', objectPosition: '50% 50%' }}
-            preload
-          />
-          <span className={styles.imageShade} />
-          <span className={styles.number} style={{ background: '#00aee8' }}>
-            08
-          </span>
-          <div className={styles.cardCopy}>
-            <p>DETAIL PAGE · PROPOSED</p>
-            <h2>AGENTIC<br />SYSTEMS</h2>
-            <span>Give the repetitive bits to the machines.</span>
-            <Link href="/services/agentic-systems">EXPLORE SERVICE ↗</Link>
-          </div>
-        </article>
-
-        {supportingCards.map((card, index) => (
-          <article
-            className={`${styles.card} ${styles.supportCard} ${index === 0 ? styles.topCard : styles.bottomCard}`}
-            key={card.number}
-          >
+      <div className={styles.field} aria-label="Scroll through DGTL 360 services">
+        <p className={styles.scrollHint}>SCROLL SERVICES ↓</p>
+        <div className={styles.serviceRail}>
+          {services.map((service, index) => (
+            <article className={styles.card} key={service.slug}>
             <Image
-              src={card.image}
+              src={service.image}
               alt=""
               fill
-              sizes="24vw"
-              style={{ objectFit: 'cover', objectPosition: 'center' }}
+              sizes="(max-width: 1000px) 92vw, 52vw"
+              style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
+              preload={index === 0}
             />
             <span className={styles.imageShade} />
-            <span className={styles.number} style={{ background: card.accent }}>
-              {card.number}
+            <span className={styles.number} style={{ background: service.accent }}>
+              {String(service.order).padStart(2, '0')}
             </span>
+            <p className={styles.cardMeta}>{service.preview}</p>
             <div className={styles.cardCopy}>
-              <h2>{card.label}</h2>
-              <span>{card.copy}</span>
+              <h2>{service.label}</h2>
+              <span>{service.cardHeadline}</span>
+              <p className={styles.cardDetails}>{service.detailDescription}</p>
+              <Link href={`/services/${service.slug}`}>EXPLORE SERVICE ↗</Link>
             </div>
           </article>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
