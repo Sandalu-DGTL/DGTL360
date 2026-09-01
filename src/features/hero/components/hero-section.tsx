@@ -8,14 +8,14 @@ const supportingCards = [
     number: '07',
     label: 'EVENTS & EXPERIENCES',
     copy: 'Good energy. Tight run sheet.',
-    image: '/assets/reference/events-detail-reference.png',
+    image: '/assets/services/events-experiences-v01.webp',
     accent: '#8d33ff',
   },
   {
     number: '01',
     label: 'PRODUCTION',
     copy: 'Sound, film and motion that earn the replay.',
-    image: '/assets/reference/homepage-reference.png',
+    image: '/assets/services/production-v01.webp',
     accent: '#ff5c35',
   },
 ];
@@ -57,11 +57,11 @@ export function HeroSection() {
       <div className={styles.field} aria-label="Selected DGTL services">
         <article className={`${styles.card} ${styles.primaryCard}`}>
           <Image
-            src="/assets/reference/homepage-reference.png"
+            src="/assets/services/agentic-systems-v01.webp"
             alt="DGTL 360 Agentic Systems visual study"
             fill
             sizes="(max-width: 900px) 86vw, 38vw"
-            style={{ objectFit: 'cover', objectPosition: '60% 50%' }}
+            style={{ objectFit: 'cover', objectPosition: '50% 50%' }}
             preload
           />
           <span className={styles.imageShade} />
