@@ -20,7 +20,7 @@ Open `http://localhost:3000`.
 3. Leave the build and output settings on their Next.js defaults.
 4. Deploy the `main` branch.
 
-No environment variables are currently required. Vercel will run `npm install` and `npm run build` automatically. An optional server-only `SITE_URL` can be set when a custom production domain is connected; otherwise Vercel's deployment URL is used for social metadata.
+The enquiry form uses Resend and requires `RESEND_API_KEY`, `ENQUIRY_FROM_EMAIL`, and `ENQUIRY_TO_EMAIL` in Vercel. Copy `.env.example` to `.env.local` for local development and never commit the real API key. An optional server-only `SITE_URL` can be set when a custom production domain is connected; otherwise Vercel's deployment URL is used for social metadata.
 
 ## Quality checks
 
@@ -44,4 +44,4 @@ See [docs/architecture.md](docs/architecture.md) for the full folder map and ext
 
 ## Content and forms
 
-The enquiry form currently opens the visitor's email client and addresses the message to `hello@dgtl.lk`. Replace this with a server-side form endpoint or CRM integration when the final destination is selected.
+The enquiry form posts to the server-only `/api/enquiry` endpoint, which validates the request and sends a notification to `hello@dgtl.lk` through Resend. See [docs/email-service.md](docs/email-service.md) for the folder structure, Vercel configuration, DNS setup, safeguards, and testing process.

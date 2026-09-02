@@ -70,6 +70,14 @@
   grid-column: 1 / -1;
 }
 
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .form button {
   min-height: 4.6rem;
   margin-top: 0.75rem;
@@ -90,6 +98,28 @@
 .form button:active {
   transform: translateY(3px);
   box-shadow: 0 2px 0 #8d33ff;
+}
+
+.form button:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+.formStatus {
+  min-height: 1.4em;
+  max-width: 62rem;
+  margin: 1.25rem 0 0;
+  color: var(--color-muted);
+  font: 700 .72rem/1.45 var(--font-mono), monospace;
+  letter-spacing: .04em;
+}
+
+.formStatus[data-state='success'] {
+  color: #8fffc6;
+}
+
+.formStatus[data-state='error'] {
+  color: #ff9987;
 }
 
 .email {
@@ -223,6 +253,11 @@
 .compact .form button:focus-visible {
   outline: 3px solid #fff;
   outline-offset: 4px;
+}
+
+.compact .formStatus {
+  margin-top: 14px;
+  font-size: 9px;
 }
 
 .compact .email {

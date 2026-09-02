@@ -14,6 +14,7 @@ dgtl-360/
 │   │   ├── (site)/
 │   │   │   ├── page.tsx          # Homepage composition
 │   │   │   └── services/[slug]/  # All eight service detail routes
+│   │   ├── api/enquiry/route.ts   # Server-only enquiry email endpoint
 │   │   ├── globals.css           # Tokens, resets, global accessibility rules
 │   │   ├── layout.tsx            # Fonts and global metadata
 │   │   └── not-found.tsx         # Unknown route state
@@ -23,7 +24,7 @@ dgtl-360/
 │   │   └── local/services.ts     # Typed service content source
 │   └── features/
 │       ├── company/              # Who-we-are and attitude sections
-│       ├── enquiry/              # Shared enquiry form
+│       ├── enquiry/              # Form UI, validation, email rendering and Resend service
 │       ├── hero/                 # Homepage opening composition
 │       ├── identity/             # DGTL field/brand transition
 │       ├── navigation/           # Global navigation
@@ -50,7 +51,7 @@ dgtl-360/
 ## Scaling path
 
 - Move local content to a headless CMS when non-developers need frequent publishing.
-- Replace the mailto form with a server endpoint, spam protection, and CRM/webhook delivery.
+- Add durable rate limiting and optional CRM/webhook delivery when enquiry volume requires it.
 - Add image derivatives or managed image delivery when final photography replaces the reference composites.
 - Add analytics, error monitoring, and performance budgets before a high-traffic campaign launch.
 - Keep the single web application until release ownership or operational boundaries justify separate services.
