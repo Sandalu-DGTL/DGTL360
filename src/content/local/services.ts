@@ -136,9 +136,18 @@ export const services: Service[] = [
     image: '/assets/services/web-platforms-v01.webp',
     imagePosition: '50% 50%',
     sections: [
-      { title: 'Build', items: [{ title: 'Full Stack Development', description: 'End-to-end development handled by our technical team.' }] },
-      { title: 'Manage', items: [{ title: 'CMS Solutions', description: 'Content systems built for easy, ongoing control.' }] },
-      { title: 'Connect', items: [{ title: 'CRM & Workflows', description: 'Automation and customer systems that keep your business moving.' }] },
+      {
+        title: 'Full Stack Development',
+        body: 'From the first click to the backend logic behind it, we build websites and apps that work seamlessly, end to end, so nothing falls through the cracks.',
+      },
+      {
+        title: 'CMS Solutions',
+        body: 'Your content, your control. We build easy-to-manage systems so you can update your site anytime, without waiting on a developer.',
+      },
+      {
+        title: 'CRM & Workflows',
+        body: 'Less chasing, more closing. We set up smart systems that track your customers and automate the busywork, so your team can focus on what matters.',
+      },
     ],
   },
   {
@@ -156,15 +165,22 @@ export const services: Service[] = [
     image: '/assets/services/apps-product-v01.webp',
     imagePosition: '50% 50%',
     sections: [
-      { title: 'Build', items: [{ title: 'Agile Development', description: 'Faster builds, augmented with bespoke AI tools.' }] },
       {
-        title: 'Platforms',
-        items: [
-          { title: 'iOS & Android Development', description: 'Native apps built for both platforms.' },
-          { title: 'Progressive Web Apps', description: 'App-like experiences that run straight from the browser.' },
-        ],
+        title: 'Agile Development',
+        body: 'Built in sprints, not guesswork. We move fast, adapt quickly, and keep you in the loop every step of the way.',
       },
-      { title: 'Operate', items: [{ title: 'DevOps Augmentation', description: 'Ongoing technical support that keeps your apps running smoothly.' }] },
+      {
+        title: 'iOS & Android Development',
+        body: 'One idea, every device. We build native apps that feel right at home on iPhone and Android alike.',
+      },
+      {
+        title: 'Progressive Web Apps (PWA)',
+        body: 'All the feel of an app, none of the download. Fast, reliable, and works even when the connection doesn’t.',
+      },
+      {
+        title: 'DevOps Augmentation',
+        body: 'The engine behind the scenes. We keep your systems deploying smoothly, scaling safely, and running without the 3am surprises.',
+      },
     ],
   },
   {
@@ -183,14 +199,21 @@ export const services: Service[] = [
     imagePosition: '50% 50%',
     sections: [
       {
-        title: 'Customer Touchpoints',
-        items: [
-          { title: 'POS Systems', description: 'Point-of-sale solutions built for smooth transactions.' },
-          { title: 'Customer Service Call Centre Solutions', description: 'Systems that keep customer support responsive and organised.' },
-        ],
+        title: 'POS Systems',
+        body: 'Checkout that just works. Fast, reliable point-of-sale systems built to keep your business moving, one sale at a time.',
       },
-      { title: 'People & Operations', items: [{ title: 'HRM Solutions', description: 'HR systems that simplify people management.' }] },
-      { title: 'Enterprise Scale', items: [{ title: 'Enterprise Solutions', description: 'Custom systems built for businesses operating at scale.' }] },
+      {
+        title: 'Customer Service Call Center Solutions',
+        body: 'Every call matters. We build systems that help your team respond faster, stay organized, and keep customers happy.',
+      },
+      {
+        title: 'HRM Solutions',
+        body: 'People are the heart of your business. We simplify hiring, payroll, and everyday HR, so your team can focus on people, not paperwork.',
+      },
+      {
+        title: 'Enterprise Solutions',
+        body: 'Big vision, solid foundation. Custom systems built to scale with you as your business grows.',
+      },
     ],
   },
   {
