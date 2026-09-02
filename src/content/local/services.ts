@@ -67,26 +67,32 @@ export const services: Service[] = [
     imagePosition: '50% 50%',
     sections: [
       {
-        title: 'Positioning',
-        items: [
-          { title: 'Strategy', description: 'What makes your brand genuinely stand out? Through research, competitive mapping and dialogue, we pinpoint where your brand can win and why anyone should care.' },
-        ],
+        title: 'Brand Strategy',
+        body: 'Positioning, target audience, brand purpose, values and messaging.',
       },
       {
-        title: 'Identity',
-        items: [
-          { title: 'Logo Design', description: 'A symbol built to carry your brand everywhere.' },
-          { title: 'Brand System', description: 'Colour, typography, tone, templates and guidelines designed as one coherent system, with every touchpoint reinforcing your brand’s inherent value.' },
-          { title: 'Artwork Creations', description: 'Stylish creative considerations that strengthen your brand’s visual pitch.' },
-        ],
+        title: 'Brand Identity',
+        body: 'Logo, colour palette, typography and visual direction.',
       },
       {
-        title: 'Go-to-Market',
-        body: 'We connect your new identity to launch plans by channelling strategy and the core operational reality behind the work.',
-        items: [
-          { title: 'Trade Marketing', description: 'Getting your brand out there and beyond.' },
-          { title: 'Business 0–1 Solutions', description: 'Building the brand and business foundation from scratch, with naming, messaging and launch sequences that blueprint your brand’s core identity.' },
-        ],
+        title: 'Creative Development',
+        body: 'Developing creative concepts, campaign ideas and visual content.',
+      },
+      {
+        title: 'Campaign Strategy',
+        body: 'Big ideas, campaign concepts and communication.',
+      },
+      {
+        title: 'Brand Collateral',
+        body: 'Business cards, presentations, packaging, menus, brochures, etc.',
+      },
+      {
+        title: 'Trade Marketing',
+        body: 'POSM, retail campaigns, in-store communication and activations.',
+      },
+      {
+        title: 'Business 0–1 Solutions',
+        body: 'Taking an idea from concept to launch, including brand, strategy and initial marketing setup.',
       },
     ],
   },

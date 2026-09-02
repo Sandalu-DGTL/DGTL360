@@ -58,6 +58,12 @@ export function EnquirySection({ compact = false }: { compact?: boolean }) {
         <button type="submit">SEND ENQUIRY</button>
       </form>
       <a className={styles.email} href="mailto:hello@dgtl.lk">hello@dgtl.lk ↗</a>
+      <address className={styles.address}>
+        <span>OUR ADDRESS</span>
+        Mode Residence<br />
+        3 Beach Rd,<br />
+        Dehiwala-Mount Lavinia
+      </address>
     </section>
   );
 }
