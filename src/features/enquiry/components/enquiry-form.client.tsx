@@ -10,7 +10,7 @@ const statusMessages: Record<SubmissionState, string> = {
   idle: '',
   submitting: 'Sending your enquiry…',
   success: 'Thank you. Your enquiry has been sent.',
-  error: 'We could not send your enquiry. Please try again or email hello@dgtl.lk.',
+  error: 'We could not send your enquiry. Please try again or email info@dgtl.lk.',
 };
 
 export function EnquiryForm({ compact }: { compact: boolean }) {

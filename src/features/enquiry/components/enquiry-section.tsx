@@ -29,7 +29,7 @@ export function EnquirySection({ compact = false }: { compact?: boolean }) {
           : 'Tell us what you are trying to make, fix or move forward. We’ll bring in the right people, ask the useful questions and come back with a practical next step.'}
       </p>
       <EnquiryForm compact={compact} />
-      <a className={styles.email} href="mailto:hello@dgtl.lk">hello@dgtl.lk ↗</a>
+      <a className={styles.email} href="mailto:info@dgtl.lk">info@dgtl.lk ↗</a>
       <address className={styles.address}>
         <span>OUR ADDRESS</span>
         Mode Residence<br />

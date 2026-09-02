@@ -12,7 +12,7 @@ export function SiteFooter() {
         <p>HAVE A PROBLEM WORTH SOLVING?</p>
         <div>
           <h2>Let’s make the<br />next thing work.</h2>
-          <a href="mailto:hello@dgtl.lk">hello@dgtl.lk ↗</a>
+          <a href="mailto:info@dgtl.lk">info@dgtl.lk ↗</a>
         </div>
       </div>
       <div className={styles.links}>

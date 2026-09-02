@@ -37,7 +37,7 @@ Official references: [Vercel Marketplace](https://vercel.com/marketplace/resend)
    ```dotenv
    RESEND_API_KEY=re_replace_with_real_key
    ENQUIRY_FROM_EMAIL="DGTL 360 Website <enquiries@mail.dgtl.lk>"
-   ENQUIRY_TO_EMAIL="hello@dgtl.lk"
+   ENQUIRY_TO_EMAIL="info@dgtl.lk"
    ```
 
 5. Redeploy after changing environment variables. For local development, copy `.env.example` to `.env.local` and add a development API key.
