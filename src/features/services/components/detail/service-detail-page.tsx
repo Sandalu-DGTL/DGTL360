@@ -5,7 +5,7 @@ import { services } from '../../../../content/local/services';
 import type { Service } from '../../types/service.types';
 import { ServiceCapabilityList } from './service-capability-list.client';
 import { ServiceDetailFooter } from './service-detail-footer';
-import { ServiceImageCarousel } from './service-image-carousel.client';
+import { ServiceHeroImage } from './service-hero-image';
 import { ServiceRevealController } from './service-reveal-controller.client';
 import styles from '../../service-detail.module.css';
 
@@ -42,7 +42,7 @@ export function ServiceDetailPage({ service }: { service: Service }) {
               data-reveal-kind="carousel"
               style={{ '--reveal-delay': '120ms' } as CSSProperties}
             >
-              <ServiceImageCarousel currentSlug={service.slug} accent={service.accent} />
+              <ServiceHeroImage service={service} />
             </div>
           </section>
 

@@ -121,6 +121,7 @@
 }
 
 .compact .kicker {
+  margin: 0;
   color: #fff;
   font-size: 9px;
   font-weight: 800;
