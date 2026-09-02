@@ -44,4 +44,4 @@ See [docs/architecture.md](docs/architecture.md) for the full folder map and ext
 
 ## Content and forms
 
-The enquiry form posts to the server-only `/api/enquiry` endpoint, which validates the request and sends a notification to `info@dgtl.lk` through Resend. See [docs/email-service.md](docs/email-service.md) for the folder structure, Vercel configuration, DNS setup, safeguards, and testing process.
+The enquiry form posts to the server-only `/api/enquiry` endpoint, which validates the request and sends a notification to `riz@dgtl.lk` through Resend. See [docs/email-service.md](docs/email-service.md) for the folder structure, Vercel configuration, DNS setup, safeguards, and testing process.

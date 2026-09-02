@@ -12,7 +12,7 @@ export async function sendEnquiryEmail(enquiry: EnquiryPayload) {
 
   const resend = new Resend(apiKey);
   const from = process.env.ENQUIRY_FROM_EMAIL ?? 'DGTL 360 Website <onboarding@resend.dev>';
-  const to = process.env.ENQUIRY_TO_EMAIL ?? 'info@dgtl.lk';
+  const to = process.env.ENQUIRY_TO_EMAIL ?? 'riz@dgtl.lk';
 
   const { data, error } = await resend.emails.send({
     from,
