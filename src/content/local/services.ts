@@ -269,20 +269,25 @@ export const services: Service[] = [
     imagePosition: '50% 50%',
     sections: [
       {
-        title: 'Agents',
-        items: [
-          { title: 'Autonomous AI Agents', description: 'AI that works independently to get things done.' },
-          { title: 'Agentic Workflows', description: 'Multi-step processes, automated end-to-end.' },
-        ],
+        title: 'Autonomous AI Agents',
+        body: 'Work that happens on its own. We build AI agents that think, decide, and act, handling tasks without needing someone to babysit every step.',
       },
       {
-        title: 'Automation & Integration',
-        items: [
-          { title: 'AI Automation Solutions', description: 'Repetitive work, handled without the manual overhead.' },
-          { title: 'AI Integration Services', description: 'AI connected cleanly into your existing systems.' },
-        ],
+        title: 'Agentic Workflows',
+        body: 'Your processes, running themselves. We connect AI agents into your everyday workflows so tasks move forward automatically, from start to finish.',
       },
-      { title: 'Augmentation', items: [{ title: 'Agentic Employee Augmentation', description: 'AI that supports your team, not replaces it.' }] },
+      {
+        title: 'AI Automation Solutions',
+        body: 'Fewer repetitive tasks, more real work. We automate the busywork with AI, so your team can spend time on what actually moves the needle.',
+      },
+      {
+        title: 'AI Integration Services',
+        body: 'AI that fits right in. We plug intelligent tools into the systems you already use, no rip-and-replace, just smarter versions of what you have.',
+      },
+      {
+        title: 'Agentic Employee Augmentation',
+        body: 'An extra set of hands that never clocks out. We pair your team with AI agents that handle the routine work, so your people can focus on the bigger picture.',
+      },
     ],
   },
 ];
