@@ -13,6 +13,7 @@
   grid-template-columns: repeat(4, 1fr);
   align-self: center;
   gap: 0.65rem;
+  animation: team-view-in 420ms cubic-bezier(.2, .75, .2, 1) both;
 }
 
 .portrait {
@@ -64,6 +65,7 @@
   flex-direction: column;
   justify-content: center;
   padding: clamp(2rem, 7vw, 7rem);
+  animation: team-view-in 420ms cubic-bezier(.2, .75, .2, 1) both;
 }
 
 .intro p,
@@ -90,6 +92,7 @@
   position: absolute;
   inset: 0;
   background: #f1682f;
+  animation: team-portrait-in 520ms cubic-bezier(.2, .75, .2, 1) both;
 }
 
 .profileImage::after {
@@ -121,6 +124,22 @@
   left: clamp(1.5rem, 4vw, 4rem);
   color: #fff;
   text-align: center;
+  animation: team-copy-in 360ms cubic-bezier(.2, .75, .2, 1) both;
+}
+
+@keyframes team-view-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes team-portrait-in {
+  from { opacity: 0.25; transform: scale(1.035); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes team-copy-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .profileCopy h3 {
@@ -167,14 +186,51 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 680px) {
   .roster {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .portrait,
   .portrait:nth-child(5n + 1),
   .portrait:nth-child(5n + 4) {
-    min-height: 220px;
+    min-height: 180px;
+  }
+
+  .hasSelection {
+    grid-template-rows: auto 1fr;
+    gap: 1rem;
+  }
+
+  .hasSelection .roster {
+    display: grid;
+    grid-auto-columns: 92px;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    padding-bottom: 0.55rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+  }
+
+  .hasSelection .portrait,
+  .hasSelection .portrait:nth-child(5n + 1),
+  .hasSelection .portrait:nth-child(5n + 4) {
+    min-height: 112px;
+    scroll-snap-align: start;
+  }
+
+  .hasSelection .profile,
+  .hasSelection .profileImage {
+    min-height: 58svh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roster,
+  .intro,
+  .profileImage,
+  .profileCopy {
+    animation: none;
   }
 }

@@ -23,7 +23,7 @@ export function TeamSection() {
   const member = selected === null ? null : members[selected];
 
   return (
-    <section className={styles.section} id="team" aria-labelledby="team-title">
+    <section className={`${styles.section} ${member ? styles.hasSelection : ''}`} id="team" aria-labelledby="team-title">
       <div className={styles.roster} aria-label="DGTL 360 team disciplines">
         {members.map(([number, role], index) => (
           <button
@@ -58,7 +58,7 @@ export function TeamSection() {
         {member ? (
           <>
             <button className={styles.back} onClick={() => setSelected(null)}>← ALL PEOPLE</button>
-            <div className={styles.profileImage}>
+            <div className={styles.profileImage} key={`image-${member[0]}`}>
               {/* Native image avoids a Vinext client-bundle React duplication issue. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -75,7 +75,7 @@ export function TeamSection() {
                 }}
               />
             </div>
-            <div className={styles.profileCopy}>
+            <div className={styles.profileCopy} key={`copy-${member[0]}`}>
               <p>PROFILE {member[0]}</p>
               <h3>{member[1]}</h3>
               <span>{member[2]}</span>

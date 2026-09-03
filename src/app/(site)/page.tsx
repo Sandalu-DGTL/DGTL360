@@ -12,14 +12,16 @@ export default function HomePage() {
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <CreativeNav />
+      <CreativeNav homepage />
       <main id="main-content" className="home-scroll-snap">
         <HeroSection />
-        <WhoWeAreSection />
-        <AttitudeSection />
-        <TeamSection />
-        <EnquirySection />
-        <DgtlFieldSection />
+        <div className="home-section-slides">
+          <WhoWeAreSection />
+          <AttitudeSection />
+          <TeamSection />
+          <EnquirySection />
+          <DgtlFieldSection />
+        </div>
       </main>
       <SiteFooter />
     </>
