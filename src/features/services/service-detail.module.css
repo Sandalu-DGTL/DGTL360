@@ -326,9 +326,15 @@
 
 .reelViewport {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
-  border-block: 1px solid rgba(255,255,255,.18);
-  background: #020202;
+  border-block: 1px solid rgba(244,244,235,.24);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.035), transparent 18%, transparent 82%, rgba(255,255,255,.025)),
+    #010101;
+  box-shadow:
+    inset 0 18px 28px rgba(0,0,0,.88),
+    inset 0 -18px 28px rgba(0,0,0,.88);
   mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
 }
@@ -339,13 +345,15 @@
   z-index: 5;
   right: 0;
   left: 0;
-  height: 9px;
+  height: 11px;
   background: repeating-linear-gradient(
     90deg,
-    transparent 0 10px,
-    rgba(255,255,255,.45) 10px 28px,
-    transparent 28px 42px
+    transparent 0 9px,
+    rgba(244,244,235,.58) 9px 27px,
+    transparent 27px 40px
   );
+  opacity: .82;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,.14));
   content: '';
   pointer-events: none;
 }
@@ -373,9 +381,9 @@
 .reelList {
   display: flex;
   flex: none;
-  gap: 14px;
+  gap: 12px;
   margin: 0;
-  padding: 29px 7px;
+  padding: 34px 6px;
   list-style: none;
 }
 
@@ -389,25 +397,47 @@
   border: 1px solid rgba(255,255,255,.18);
   border-radius: 0 0 18px;
   background: #111;
-  box-shadow: 0 20px 48px rgba(0,0,0,.42);
-  transition: border-color 220ms ease, transform 320ms cubic-bezier(.16, 1, .3, 1);
+  box-shadow: 0 18px 44px rgba(0,0,0,.5);
+  opacity: .58;
+  transform: scale(.965);
+  transform-origin: center;
+  transition:
+    border-color 320ms ease,
+    box-shadow 480ms cubic-bezier(.16, 1, .3, 1),
+    opacity 420ms ease,
+    transform 520ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.reelCard::before {
+  position: absolute;
+  z-index: 2;
+  inset: 6px;
+  border: 1px solid rgba(255,255,255,.08);
+  content: '';
+  pointer-events: none;
+  transition: border-color 320ms ease;
 }
 
 .reelCard::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 34%, rgba(0,0,0,.92));
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.14), transparent 34%),
+    linear-gradient(180deg, transparent 30%, rgba(0,0,0,.94));
   content: '';
+  transition: background 420ms ease;
 }
 
 .reelCard[data-current='true'] {
-  border-color: var(--reel-accent);
-  box-shadow: 0 0 0 1px var(--reel-accent), 0 22px 56px rgba(0,0,0,.55);
+  border-color: color-mix(in srgb, var(--reel-accent) 72%, rgba(255,255,255,.2));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--reel-accent) 45%, transparent), 0 22px 56px rgba(0,0,0,.55);
+  opacity: .74;
 }
 
 .reelImage {
-  filter: saturate(.78) contrast(1.06);
-  transition: filter 360ms ease, transform 520ms cubic-bezier(.16, 1, .3, 1);
+  filter: grayscale(.48) saturate(.32) brightness(.58) contrast(1.12);
+  transform: scale(1.01);
+  transition: filter 480ms ease, transform 620ms cubic-bezier(.16, 1, .3, 1);
 }
 
 .reelCard strong {
@@ -416,26 +446,57 @@
   right: 16px;
   bottom: 15px;
   left: 16px;
-  color: #fff;
+  color: rgba(255,255,255,.78);
   font-size: clamp(18px, 1.65vw, 25px);
   font-weight: 780;
   line-height: .94;
   letter-spacing: -.045em;
+  text-shadow: 0 2px 18px rgba(0,0,0,.92);
   text-transform: uppercase;
+  transition: color 320ms ease, transform 480ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.reelTrack:has(.reelCard:hover) .reelCard:not(:hover),
+.reelTrack:has(.reelCard:focus-visible) .reelCard:not(:focus-visible) {
+  opacity: .28;
+  transform: scale(.935);
 }
 
 .reelCard:hover,
 .reelCard:focus-visible {
-  z-index: 2;
+  z-index: 6;
   border-color: var(--reel-accent);
+  box-shadow:
+    0 0 0 1px var(--reel-accent),
+    0 30px 66px rgba(0,0,0,.76),
+    0 0 42px color-mix(in srgb, var(--reel-accent) 34%, transparent);
+  opacity: 1;
   outline: none;
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.075) rotate(-.25deg);
+}
+
+.reelCard:hover::before,
+.reelCard:focus-visible::before {
+  border-color: color-mix(in srgb, var(--reel-accent) 58%, rgba(255,255,255,.22));
+}
+
+.reelCard:hover::after,
+.reelCard:focus-visible::after {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.03), transparent 42%),
+    linear-gradient(180deg, transparent 40%, rgba(0,0,0,.78));
 }
 
 .reelCard:hover .reelImage,
 .reelCard:focus-visible .reelImage {
-  filter: saturate(1.08) contrast(1.1);
-  transform: scale(1.055);
+  filter: grayscale(0) saturate(1.08) brightness(1.02) contrast(1.1);
+  transform: scale(1.065);
+}
+
+.reelCard:hover strong,
+.reelCard:focus-visible strong {
+  color: #fff;
+  transform: translateY(-2px);
 }
 
 @keyframes cinemaRoll {
