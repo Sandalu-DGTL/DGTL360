@@ -259,34 +259,34 @@
   --top-ease: cubic-bezier(.58, .02, .32, 1);
   --left-ease: cubic-bezier(.08, .82, .18, 1);
   z-index: 4;
-  top: 53%;
-  left: 47%;
+  top: 52%;
+  left: 34%;
   opacity: 1;
   pointer-events: auto;
   box-shadow: 0 34px 100px rgba(0, 0, 0, 0.64), 0 0 52px rgba(0, 174, 232, 0.08);
-  transform: translate3d(-50%, -50%, 60px) rotateX(0) rotateY(0) rotateZ(0) scale(1.78);
+  transform: translate3d(-50%, -50%, 60px) rotateX(0) rotateY(0) rotateZ(0) scale(1.55);
 }
 
 .card[data-position='previous'] {
   --top-ease: cubic-bezier(.08, .82, .18, 1);
   --left-ease: cubic-bezier(.58, .02, .32, 1);
   z-index: 2;
-  top: 17%;
-  left: 81%;
-  opacity: 0.42;
-  filter: brightness(0.58) saturate(0.62);
-  transform: translate3d(-50%, -50%, -42px) rotateX(4deg) rotateY(-18deg) rotateZ(6deg) scale(1.03);
+  top: 20%;
+  left: 84%;
+  opacity: 0.78;
+  filter: brightness(0.82) saturate(0.82);
+  transform: translate3d(-50%, -50%, -42px) rotateX(3deg) rotateY(-12deg) rotateZ(4deg) scale(0.82);
 }
 
 .card[data-position='next'] {
   --top-ease: cubic-bezier(.3, .72, .24, 1);
   --left-ease: cubic-bezier(.3, .72, .24, 1);
   z-index: 2;
-  top: 84%;
-  left: 82%;
-  opacity: 0.42;
-  filter: brightness(0.6) saturate(0.64);
-  transform: translate3d(-50%, -50%, -42px) rotateX(-4deg) rotateY(18deg) rotateZ(-6deg) scale(1.03);
+  top: 80%;
+  left: 84%;
+  opacity: 0.78;
+  filter: brightness(0.84) saturate(0.84);
+  transform: translate3d(-50%, -50%, -42px) rotateX(-3deg) rotateY(12deg) rotateZ(-4deg) scale(0.82);
 }
 
 .card[data-position='hidden'] {
