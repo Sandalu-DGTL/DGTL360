@@ -9,7 +9,8 @@ export function ServiceHeroImage({ service }: { service: Service }) {
         src={service.image}
         alt={`${service.label} service visual`}
         fill
-        priority
+        loading="eager"
+        fetchPriority="high"
         sizes="(max-width: 1000px) 100vw, 40vw"
         style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
       />

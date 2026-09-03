@@ -281,44 +281,166 @@
   }
 }
 
-.pagination {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.cinemaReel {
+  position: relative;
+  padding: 2rem 0 2.4rem;
   border-top: 1px solid rgba(255,255,255,.18);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 20%, color-mix(in srgb, var(--service-accent) 17%, transparent), transparent 34%),
+    #050505;
 }
 
-.pagination a {
+.reelHeader {
   display: grid;
-  min-height: 118px;
-  align-content: center;
-  gap: .75rem;
-  padding: 1.5rem 4vw;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: .55rem 2rem;
+  padding: 0 4vw 1.4rem;
 }
 
-.pagination a:last-child {
-  border-left: 1px solid rgba(255,255,255,.18);
+.reelHeader p,
+.reelHeader span {
+  margin: 0;
+  color: rgba(255,255,255,.56);
+  font: 800 8px/1 var(--font-mono), monospace;
+  letter-spacing: .13em;
+}
+
+.reelHeader p {
+  color: var(--service-accent);
+}
+
+.reelHeader h2 {
+  grid-row: 2;
+  margin: 0;
+  font: 400 clamp(28px, 3vw, 46px)/.9 var(--font-display);
+  letter-spacing: -.05em;
+}
+
+.reelHeader span {
+  grid-row: 2;
   text-align: right;
 }
 
-.pagination span {
-  color: #fff;
-  font: 800 8px/1 var(--font-mono), monospace;
-  letter-spacing: .1em;
+.reelViewport {
+  position: relative;
+  overflow: hidden;
+  border-block: 1px solid rgba(255,255,255,.18);
+  background: #020202;
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
 }
 
-.pagination strong {
-  color: #fff;
-  font-size: clamp(20px, 2.3vw, 34px);
-  font-weight: 750;
-  line-height: .95;
-  letter-spacing: -.04em;
+.reelViewport::before,
+.reelViewport::after {
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  left: 0;
+  height: 9px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 10px,
+    rgba(255,255,255,.45) 10px 28px,
+    transparent 28px 42px
+  );
+  content: '';
+  pointer-events: none;
 }
 
-.pagination a:hover span,
-.pagination a:focus-visible span,
-.pagination a:hover strong,
-.pagination a:focus-visible strong {
-  color: var(--service-accent);
+.reelViewport::before {
+  top: 6px;
+}
+
+.reelViewport::after {
+  bottom: 6px;
+}
+
+.reelTrack {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: cinemaRoll 42s linear infinite;
+}
+
+.reelViewport:hover .reelTrack,
+.reelViewport:focus-within .reelTrack {
+  animation-play-state: paused;
+}
+
+.reelList {
+  display: flex;
+  flex: none;
+  gap: 14px;
+  margin: 0;
+  padding: 29px 7px;
+  list-style: none;
+}
+
+.reelCard {
+  --reel-accent: var(--service-accent);
+  position: relative;
+  display: block;
+  width: clamp(220px, 21vw, 292px);
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 0 0 18px;
+  background: #111;
+  box-shadow: 0 20px 48px rgba(0,0,0,.42);
+  transition: border-color 220ms ease, transform 320ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.reelCard::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 34%, rgba(0,0,0,.92));
+  content: '';
+}
+
+.reelCard[data-current='true'] {
+  border-color: var(--reel-accent);
+  box-shadow: 0 0 0 1px var(--reel-accent), 0 22px 56px rgba(0,0,0,.55);
+}
+
+.reelImage {
+  filter: saturate(.78) contrast(1.06);
+  transition: filter 360ms ease, transform 520ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.reelCard strong {
+  position: absolute;
+  z-index: 2;
+  right: 16px;
+  bottom: 15px;
+  left: 16px;
+  color: #fff;
+  font-size: clamp(18px, 1.65vw, 25px);
+  font-weight: 780;
+  line-height: .94;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+}
+
+.reelCard:hover,
+.reelCard:focus-visible {
+  z-index: 2;
+  border-color: var(--reel-accent);
+  outline: none;
+  transform: translateY(-5px);
+}
+
+.reelCard:hover .reelImage,
+.reelCard:focus-visible .reelImage {
+  filter: saturate(1.08) contrast(1.1);
+  transform: scale(1.055);
+}
+
+@keyframes cinemaRoll {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .contact {
@@ -416,17 +538,21 @@
     margin: -2px 0 26px;
   }
 
-  .pagination {
+  .reelHeader {
     grid-template-columns: 1fr;
-  }
-
-  .pagination a {
     padding-inline: 18px;
   }
 
-  .pagination a:last-child {
-    border-top: 1px solid rgba(255,255,255,.18);
-    border-left: 0;
+  .reelHeader span {
+    display: none;
+  }
+
+  .reelCard {
+    width: min(70vw, 260px);
+  }
+
+  .reelTrack {
+    animation-duration: 34s;
   }
 
   .detailFooter {
@@ -447,6 +573,25 @@
     opacity: 1;
     filter: none;
     transform: none;
+    transition: none;
+  }
+
+  .reelViewport {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .reelTrack {
+    animation: none;
+  }
+
+  .reelList[aria-hidden='true'] {
+    display: none;
+  }
+
+  .reelCard,
+  .reelImage {
     transition: none;
   }
 

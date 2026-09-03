@@ -4,16 +4,13 @@ import { EnquirySection } from '../../../enquiry/components/enquiry-section';
 import { services } from '../../../../content/local/services';
 import type { Service } from '../../types/service.types';
 import { ServiceCapabilityList } from './service-capability-list.client';
+import { ServiceCinemaReel } from './service-cinema-reel';
 import { ServiceDetailFooter } from './service-detail-footer';
 import { ServiceHeroImage } from './service-hero-image';
 import { ServiceRevealController } from './service-reveal-controller.client';
 import styles from '../../service-detail.module.css';
 
 export function ServiceDetailPage({ service }: { service: Service }) {
-  const currentIndex = services.findIndex((item) => item.slug === service.slug);
-  const previous = services[(currentIndex - 1 + services.length) % services.length];
-  const next = services[(currentIndex + 1) % services.length];
-
   return (
     <div className={styles.page} style={{ '--service-accent': service.accent } as CSSProperties}>
       <ServiceRevealController />
@@ -50,16 +47,7 @@ export function ServiceDetailPage({ service }: { service: Service }) {
             <ServiceCapabilityList sections={service.sections} />
           </section>
 
-          <nav className={styles.pagination} aria-label="Adjacent services">
-            <Link href={`/services/${previous.slug}`}>
-              <span>← PREVIOUS</span>
-              <strong>{previous.label}</strong>
-            </Link>
-            <Link href={`/services/${next.slug}`}>
-              <span>NEXT →</span>
-              <strong>{next.label}</strong>
-            </Link>
-          </nav>
+          <ServiceCinemaReel services={services} currentSlug={service.slug} />
         </div>
 
         <aside className={styles.contact}>
