@@ -35,7 +35,7 @@ Official references: [Vercel Marketplace](https://vercel.com/marketplace/resend)
 4. In Vercel project settings, configure these variables for Production, Preview and Development as appropriate:
 
    ```dotenv
-   RESEND_API_KEY=re_replace_with_real_key
+   RESEND_API_KEY=<your-resend-api-key>
    ENQUIRY_FROM_EMAIL="DGTL 360 Website <enquiries@mail.dgtl.lk>"
    ENQUIRY_TO_EMAIL="riz@dgtl.lk"
    ```

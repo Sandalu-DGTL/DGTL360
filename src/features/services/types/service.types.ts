@@ -21,3 +21,17 @@ export type Service = {
   imagePosition?: string;
   sections: ServiceSection[];
 };
+
+export type HomeService = Pick<
+  Service,
+  | 'order'
+  | 'slug'
+  | 'label'
+  | 'cardHeadline'
+  | 'preview'
+  | 'summary'
+  | 'detailDescription'
+  | 'accent'
+  | 'image'
+  | 'imagePosition'
+>;

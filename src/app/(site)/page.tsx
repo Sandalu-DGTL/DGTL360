@@ -1,10 +1,39 @@
 import { SiteFooter } from '../../components/layout/site-footer';
-import { AttitudeSection, WhoWeAreSection } from '../../features/company';
-import { EnquirySection } from '../../features/enquiry';
-import { HeroSection } from '../../features/hero';
-import { DgtlFieldSection } from '../../features/identity';
-import { CreativeNav } from '../../features/navigation';
-import { TeamSection } from '../../features/team';
+import { services } from '../../content/local/services';
+import { AttitudeSection } from '../../features/company/components/attitude-section';
+import { WhoWeAreSection } from '../../features/company/components/who-we-are-section';
+import { EnquirySection } from '../../features/enquiry/components/enquiry-section';
+import { HeroSection } from '../../features/hero/components/hero-section';
+import { DgtlFieldSection } from '../../features/identity/components/dgtl-field-section';
+import { CreativeNav } from '../../features/navigation/components/creative-nav';
+import type { HomeService } from '../../features/services/types/service.types';
+import { TeamSection } from '../../features/team/components/team-section.client';
+
+const homeServices: HomeService[] = services.map(
+  ({
+    order,
+    slug,
+    label,
+    cardHeadline,
+    preview,
+    summary,
+    detailDescription,
+    accent,
+    image,
+    imagePosition,
+  }) => ({
+    order,
+    slug,
+    label,
+    cardHeadline,
+    preview,
+    summary,
+    detailDescription,
+    accent,
+    image,
+    imagePosition,
+  }),
+);
 
 export default function HomePage() {
   return (
@@ -14,7 +43,7 @@ export default function HomePage() {
       </a>
       <CreativeNav homepage />
       <main id="main-content" className="home-scroll-snap">
-        <HeroSection />
+        <HeroSection services={homeServices} />
         <div className="home-section-slides">
           <WhoWeAreSection />
           <AttitudeSection />

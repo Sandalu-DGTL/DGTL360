@@ -31,8 +31,18 @@ export function CursorVideoBackground() {
     };
 
     const playVideo = () => {
-      if (reducedMotion.matches) return;
+      if (reducedMotion.matches || !video.paused) return;
       void video.play().catch(() => undefined);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        clearTimeout(idleTimer);
+        pauseAtRest();
+        return;
+      }
+
+      applyInputMode();
     };
 
     const handlePointerMove = (event: PointerEvent) => {
@@ -84,6 +94,7 @@ export function CursorVideoBackground() {
 
     applyInputMode();
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     reducedMotion.addEventListener('change', applyInputMode);
     coarsePointer.addEventListener('change', applyInputMode);
 
@@ -91,6 +102,7 @@ export function CursorVideoBackground() {
       clearTimeout(idleTimer);
       cancelAnimationFrame(animationFrame);
       window.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       reducedMotion.removeEventListener('change', applyInputMode);
       coarsePointer.removeEventListener('change', applyInputMode);
     };

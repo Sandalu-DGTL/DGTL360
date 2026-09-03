@@ -4,14 +4,13 @@ import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { services } from '../../../content/local/services';
+import type { HomeService } from '../../services/types/service.types';
 import { CursorVideoBackground } from './cursor-video-background.client';
 import styles from '../hero.module.css';
 
 const DESKTOP_QUERY = '(min-width: 1001px)';
 
-function getWheelPosition(index: number, activeIndex: number) {
-  const total = services.length;
+function getWheelPosition(index: number, activeIndex: number, total: number) {
   const previous = (activeIndex - 1 + total) % total;
   const next = (activeIndex + 1) % total;
 
@@ -22,28 +21,18 @@ function getWheelPosition(index: number, activeIndex: number) {
 }
 
 function TypedText({ text }: { text: string }) {
-  return (
-    <p className={styles.cardDetails} aria-label={text}>
-      {Array.from(text).map((character, index) => (
-        <span
-          aria-hidden="true"
-          className={styles.typedCharacter}
-          key={`${character}-${index}`}
-          style={{ '--character-delay': `${160 + index * 5}ms` } as CSSProperties}
-        >
-          {character}
-        </span>
-      ))}
-    </p>
-  );
+  return <p className={styles.cardDetails}>{text}</p>;
 }
 
-export function HeroSection() {
+export function HeroSection({ services }: { services: HomeService[] }) {
   const heroRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const pointerFrameRef = useRef(0);
+  const pointerPositionRef = useRef({ x: 0, y: 0 });
   const [activeIndex, setActiveIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+  const serviceCount = services.length;
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -61,7 +50,7 @@ export function HeroSection() {
         const bounds = hero.getBoundingClientRect();
         const scrollDistance = Math.max(hero.offsetHeight - window.innerHeight, 1);
         const progress = Math.min(1, Math.max(0, -bounds.top / scrollDistance));
-        const nextIndex = Math.round(progress * (services.length - 1));
+        const nextIndex = Math.round(progress * (serviceCount - 1));
         setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
       });
     };
@@ -78,31 +67,52 @@ export function HeroSection() {
       window.removeEventListener('resize', updateFromScroll);
       media.removeEventListener('change', updateMode);
     };
-  }, []);
+  }, [serviceCount]);
+
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(pointerFrameRef.current);
+    },
+    [],
+  );
 
   const activeService = services[previewIndex ?? activeIndex];
-  const progress = ((activeIndex + 1) / services.length) * 100;
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== 'mouse') return;
-    const stage = stageRef.current;
-    if (!stage) return;
+    pointerPositionRef.current = { x: event.clientX, y: event.clientY };
 
-    const bounds = stage.getBoundingClientRect();
-    const x = event.clientX / bounds.width - 0.5;
-    const y = event.clientY / bounds.height - 0.5;
-    stage.style.setProperty('--pointer-x', `${x * 12}px`);
-    stage.style.setProperty('--pointer-y', `${y * 9}px`);
-    stage.style.setProperty('--copy-x', `${x * -3.6}px`);
-    stage.style.setProperty('--copy-y', `${y * -2.7}px`);
+    if (pointerFrameRef.current) return;
+
+    pointerFrameRef.current = requestAnimationFrame(() => {
+      pointerFrameRef.current = 0;
+      const stage = stageRef.current;
+      if (!stage) return;
+
+      const bounds = stage.getBoundingClientRect();
+      const x = (pointerPositionRef.current.x - bounds.left) / bounds.width - 0.5;
+      const y = (pointerPositionRef.current.y - bounds.top) / bounds.height - 0.5;
+      stage.style.setProperty('--pointer-x', `${x * 12}px`);
+      stage.style.setProperty('--pointer-y', `${y * 9}px`);
+      stage.style.setProperty('--copy-x', `${x * -3.6}px`);
+      stage.style.setProperty('--copy-y', `${y * -2.7}px`);
+    });
   };
 
   const resetPointer = () => {
-    stageRef.current?.style.setProperty('--pointer-x', '0px');
-    stageRef.current?.style.setProperty('--pointer-y', '0px');
-    stageRef.current?.style.setProperty('--copy-x', '0px');
-    stageRef.current?.style.setProperty('--copy-y', '0px');
+    cancelAnimationFrame(pointerFrameRef.current);
+    pointerFrameRef.current = 0;
+    const stage = stageRef.current;
+    if (!stage) return;
+    stage.style.setProperty('--pointer-x', '0px');
+    stage.style.setProperty('--pointer-y', '0px');
+    stage.style.setProperty('--copy-x', '0px');
+    stage.style.setProperty('--copy-y', '0px');
   };
+
+  if (!activeService || serviceCount === 0) return null;
+
+  const progress = ((activeIndex + 1) / serviceCount) * 100;
 
   return (
     <section
@@ -110,7 +120,7 @@ export function HeroSection() {
       className={styles.hero}
       id="top"
       aria-labelledby="hero-title"
-      style={{ '--service-scroll-height': `${100 + (services.length - 1) * 72}svh` } as CSSProperties}
+      style={{ '--service-scroll-height': `${100 + (serviceCount - 1) * 72}svh` } as CSSProperties}
     >
       <div
         ref={stageRef}
@@ -156,8 +166,9 @@ export function HeroSection() {
           </p>
           <div className={styles.serviceWheel}>
             {services.map((service, index) => {
-              const position = getWheelPosition(index, activeIndex);
-              const isInteractive = !isDesktop || position === 'active';
+              const position = getWheelPosition(index, activeIndex, serviceCount);
+              const isInteractive = isDesktop !== true || position === 'active';
+              const shouldRenderImage = isDesktop === false || position !== 'hidden';
 
               return (
                 <article
@@ -173,15 +184,17 @@ export function HeroSection() {
                   onFocus={() => setPreviewIndex(index)}
                   onBlur={() => setPreviewIndex(null)}
                 >
-                  <Image
-                    className={styles.cardImage}
-                    src={service.image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 1000px) 92vw, 32vw"
-                    style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
-                    preload={index === 0}
-                  />
+                  {shouldRenderImage ? (
+                    <Image
+                      className={styles.cardImage}
+                      src={service.image}
+                      alt=""
+                      fill
+                      sizes="(max-width: 1000px) 92vw, 32vw"
+                      style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
+                      preload={index === 0}
+                    />
+                  ) : null}
                   <span className={styles.imageShade} />
                   <span className={styles.number} style={{ background: service.accent }}>
                     {String(service.order).padStart(2, '0')}

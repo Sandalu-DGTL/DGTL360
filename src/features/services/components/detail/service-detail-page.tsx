@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
-import { EnquirySection } from '../../../enquiry';
+import { EnquirySection } from '../../../enquiry/components/enquiry-section';
 import { services } from '../../../../content/local/services';
 import type { Service } from '../../types/service.types';
 import { ServiceCapabilityList } from './service-capability-list.client';
