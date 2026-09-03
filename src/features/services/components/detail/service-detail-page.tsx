@@ -46,14 +46,14 @@ export function ServiceDetailPage({ service }: { service: Service }) {
           <section className={styles.sections} aria-label={`${service.label} capabilities`}>
             <ServiceCapabilityList sections={service.sections} />
           </section>
-
-          <ServiceCinemaReel services={services} currentSlug={service.slug} />
         </div>
 
         <aside className={styles.contact}>
           <EnquirySection compact />
         </aside>
       </main>
+
+      <ServiceCinemaReel services={services} currentSlug={service.slug} />
       <ServiceDetailFooter />
     </div>
   );
