@@ -17,37 +17,20 @@ export const services: Service[] = [
     imagePosition: '50% 50%',
     sections: [
       {
-        title: 'Sound',
-        items: [
-          { title: 'Songs', description: 'Original music and compositions, from concept to final master audio.' },
-          { title: 'Jingles', description: 'Short, catchy brand identifiers that make yours instantly recognizable.' },
-          { title: 'Voiceovers & Voice Prompts', description: 'Professional voice recording for ads, IVR systems, and corporate content.' },
-          { title: 'Podcast Production', description: 'Full production: recording through to publish-ready episodes.' },
-        ],
+        title: 'Audio Production',
+        body: 'Everything sound: original song production and mastering, catchy brand jingles, IVR phone recordings, multi-language voiceovers, and complete podcast recording and editing.',
       },
       {
-        title: 'Capture',
-        items: [
-          { title: 'TVCs', description: 'Broadcast-ready commercials, scripted, cast, shot and delivered.' },
-          { title: 'Music Videos', description: 'Cinematic captures that visually present the artist’s creativity.' },
-          { title: 'Digital Ads', description: 'Short-form content built to stop the scroll.' },
-          { title: 'Corporate Films', description: 'Company stories told for websites, pitches and investor communication.' },
-          { title: 'Branded Content', description: 'The brand lives inside the narrative, not beside it.' },
-          { title: 'Live Productions', description: 'Multi-camera coverage for concerts, conferences and live events.' },
-          { title: 'Creative Development', description: 'Ideation, scripting and storyboarding.' },
-          { title: 'Photography', description: 'Commercial, product, lifestyle and event photography planned around your brand.' },
-        ],
+        title: 'Video Production',
+        body: 'Everything filmed: TV commercials, music videos, social media ads, company videos, brand stories, live event streams, and script-to-concept development.',
       },
       {
-        title: 'Post & Polish',
-        items: [
-          { title: 'Motion Graphics', description: 'Animated typography and visuals.' },
-          { title: 'Animation & 3D', description: '2D and 3D content for products and marketing.' },
-          { title: 'VFX & Compositing', description: 'Effects and digital environment enhancements.' },
-          { title: 'Post Production', description: 'The finished product, with raw footage made platform-ready.' },
-          { title: 'Colour Grading', description: 'Consistency in cinematic and visual aesthetic tone.' },
-          { title: 'AI Content Production', description: 'AI-assisted ideation and asset creation, without replacing the craft.' },
-        ],
+        title: 'Photography',
+        body: 'Everything shot: ad campaign imagery, e-commerce product photos, lifestyle visual shoots, and live event coverage.',
+      },
+      {
+        title: 'Motion & Post',
+        body: 'Everything edited: 2D motion graphics, 3D animation, visual effects (VFX), video editing, cinematic color grading, and AI-powered content generation.',
       },
     ],
   },
