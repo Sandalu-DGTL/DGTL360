@@ -244,6 +244,7 @@
   --card-tilt-x: 0deg;
   --card-tilt-y: 0deg;
   --orbit-ease: cubic-bezier(.45, 0, .55, 1);
+  --orbit-duration: 780ms;
   position: absolute;
   z-index: 1;
   top: 84%;
@@ -262,12 +263,12 @@
   transform-style: preserve-3d;
   will-change: top, left, opacity, filter, transform;
   transition:
-    top 1250ms var(--orbit-ease),
-    left 1250ms var(--orbit-ease),
-    opacity 440ms ease-in-out,
-    filter 900ms ease-in-out,
-    box-shadow 900ms ease-in-out,
-    transform 1250ms var(--orbit-ease);
+    top var(--orbit-duration) var(--orbit-ease),
+    left var(--orbit-duration) var(--orbit-ease),
+    opacity 280ms ease-in-out,
+    filter 560ms ease-in-out,
+    box-shadow 560ms ease-in-out,
+    transform var(--orbit-duration) var(--orbit-ease);
 }
 
 .card[data-position='active'] {
@@ -303,13 +304,13 @@
 .card[data-position='hidden'] {
   visibility: hidden;
   transition:
-    top 1250ms var(--orbit-ease),
-    left 1250ms var(--orbit-ease),
-    opacity 440ms ease-in-out,
-    filter 900ms ease-in-out,
-    box-shadow 900ms ease-in-out,
-    transform 1250ms var(--orbit-ease),
-    visibility 0s linear 1250ms;
+    top var(--orbit-duration) var(--orbit-ease),
+    left var(--orbit-duration) var(--orbit-ease),
+    opacity 280ms ease-in-out,
+    filter 560ms ease-in-out,
+    box-shadow 560ms ease-in-out,
+    transform var(--orbit-duration) var(--orbit-ease),
+    visibility 0s linear var(--orbit-duration);
 }
 
 .cardMotion {
@@ -345,7 +346,7 @@
 
 .cardImage {
   filter: saturate(0.651) brightness(1) contrast(1.04);
-  transition: filter 420ms ease-in-out, transform 900ms ease-in-out;
+  transition: filter 320ms ease-in-out, transform 520ms ease-in-out;
 }
 
 .card[data-position='active'] .cardImage {
@@ -356,7 +357,7 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.92));
-  transition: background 420ms ease-in-out;
+  transition: background 320ms ease-in-out;
 }
 
 .number {
@@ -425,7 +426,7 @@
   justify-content: flex-end;
   background: linear-gradient(180deg, rgba(4, 5, 6, 0.96), #030405 70%);
   transform: translateY(102%);
-  transition: transform 780ms ease-in-out;
+  transition: transform 520ms ease-in-out;
 }
 
 .card[data-position='active']:hover .cardOverlay,
@@ -483,7 +484,7 @@
   display: block;
   height: 100%;
   background: var(--color-cyan);
-  transition: width 460ms ease-in-out;
+  transition: width 260ms ease-in-out;
 }
 
 @keyframes detail-reveal {
