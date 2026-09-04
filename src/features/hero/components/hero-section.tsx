@@ -10,9 +10,9 @@ import styles from '../hero.module.css';
 
 const DESKTOP_QUERY = '(min-width: 1001px)';
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-const SCROLL_DAMPING = 0.11;
+const SCROLL_DAMPING = 0.045;
 const SCROLL_SETTLE_THRESHOLD = 0.0005;
-const SERVICE_SCROLL_STEP = 90;
+const SERVICE_SCROLL_STEP = 105;
 
 function getWheelPosition(index: number, activeIndex: number, total: number) {
   const previous = (activeIndex - 1 + total) % total;
