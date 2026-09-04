@@ -3,6 +3,11 @@
   --pointer-y: 0px;
   --copy-x: 0px;
   --copy-y: 0px;
+  --title-push-x: 0px;
+  --title-push-y: 0px;
+  --title-skew: 0deg;
+  --subtitle-push-x: 0px;
+  --subtitle-push-y: 0px;
   position: relative;
   height: var(--service-scroll-height);
   isolation: isolate;
@@ -112,6 +117,9 @@
   margin: 0;
   font: 400 clamp(3rem, 4.6vw, 5.9rem)/0.78 var(--font-display);
   letter-spacing: -0.065em;
+  transform: translate3d(var(--title-push-x), var(--title-push-y), 0) skewX(var(--title-skew));
+  transition: transform 90ms linear;
+  will-change: transform;
 }
 
 .title span {
@@ -132,6 +140,9 @@
   color: var(--color-muted);
   font-size: clamp(0.92rem, 1.02vw, 1.18rem);
   line-height: 1.45;
+  transform: translate3d(var(--subtitle-push-x), var(--subtitle-push-y), 0);
+  transition: transform 120ms linear;
+  will-change: transform;
 }
 
 .activeService {
@@ -196,6 +207,7 @@
   position: absolute;
   inset: 1.4rem 0 0;
   perspective: 1450px;
+  pointer-events: none;
   transform-style: preserve-3d;
 }
 
@@ -227,6 +239,10 @@
 }
 
 .card {
+  --card-push-x: 0px;
+  --card-push-y: 0px;
+  --card-tilt-x: 0deg;
+  --card-tilt-y: 0deg;
   --top-ease: cubic-bezier(.3, .7, .2, 1);
   --left-ease: cubic-bezier(.3, .7, .2, 1);
   position: absolute;
@@ -249,7 +265,7 @@
   transition:
     top 1150ms var(--top-ease),
     left 1150ms var(--left-ease),
-    opacity 380ms ease,
+    opacity 240ms ease,
     filter 820ms ease,
     box-shadow 820ms ease,
     transform 1150ms cubic-bezier(.16, 1, .3, 1);
@@ -273,8 +289,9 @@
   z-index: 2;
   top: 20%;
   left: 84%;
-  opacity: 0.78;
-  filter: brightness(0.82) saturate(0.82);
+  opacity: 0.42;
+  filter: brightness(0.82) saturate(0.7);
+  pointer-events: auto;
   transform: translate3d(-50%, -50%, -36px) rotateX(2deg) rotateY(-10deg) rotateZ(3deg) scale(0.78);
 }
 
@@ -284,8 +301,9 @@
   z-index: 2;
   top: 80%;
   left: 84%;
-  opacity: 0.78;
-  filter: brightness(0.84) saturate(0.84);
+  opacity: 0.42;
+  filter: brightness(0.84) saturate(0.7);
+  pointer-events: auto;
   transform: translate3d(-50%, -50%, -36px) rotateX(-2deg) rotateY(10deg) rotateZ(-3deg) scale(0.78);
 }
 
@@ -294,16 +312,51 @@
   transition:
     top 1150ms cubic-bezier(.3, .72, .24, 1),
     left 1150ms cubic-bezier(.3, .72, .24, 1),
-    opacity 380ms ease,
+    opacity 240ms ease,
     filter 820ms ease,
     box-shadow 820ms ease,
     transform 1150ms cubic-bezier(.16, 1, .3, 1),
     visibility 0s linear 1150ms;
 }
 
+.cardMotion {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  transform: perspective(1100px) translate3d(0, 0, 0) rotateX(0) rotateY(0) scale(1);
+  transform-style: preserve-3d;
+  transition: transform 120ms linear, opacity 180ms ease;
+  will-change: transform;
+}
+
+.card:hover .cardMotion,
+.card:focus-within .cardMotion {
+  transform:
+    perspective(1100px)
+    translate3d(var(--card-push-x), var(--card-push-y), 0)
+    rotateX(var(--card-tilt-x))
+    rotateY(var(--card-tilt-y))
+    scale(1.018);
+}
+
+.card[data-position='previous']:hover,
+.card[data-position='previous']:focus-within,
+.card[data-position='next']:hover,
+.card[data-position='next']:focus-within {
+  z-index: 5;
+  opacity: 1;
+  filter: none;
+  box-shadow: 0 30px 92px rgba(0, 0, 0, 0.72), 0 0 42px color-mix(in srgb, var(--service-accent) 24%, transparent);
+}
+
 .cardImage {
-  filter: saturate(0.86) contrast(1.08);
-  transition: filter 820ms ease, transform 900ms cubic-bezier(.2, .78, .15, 1);
+  filter: saturate(0.651) brightness(1) contrast(1.04);
+  transition: filter 300ms ease, transform 700ms cubic-bezier(.2, .75, .15, 1);
+}
+
+.card[data-position='active'] .cardImage {
+  filter: saturate(1.05) brightness(1) contrast(1.04);
 }
 
 .imageShade {
@@ -387,10 +440,10 @@
   transform: translateY(0);
 }
 
-.card[data-position='active']:hover .cardImage,
-.card[data-position='active']:focus-within .cardImage {
+.card:hover .cardImage,
+.card:focus-within .cardImage {
   filter: saturate(1.08) contrast(1.12);
-  transform: scale(1.035);
+  transform: scale(1.018);
 }
 
 .overlayKicker {
@@ -472,6 +525,12 @@
     transform: none;
   }
 
+  .title,
+  .intro {
+    transform: none;
+    transition: none;
+  }
+
   .title {
     font-size: clamp(3.4rem, 10vw, 6.4rem);
   }
@@ -530,6 +589,13 @@
     transform: none;
     content-visibility: auto;
     contain-intrinsic-size: 620px;
+  }
+
+  .cardMotion,
+  .card:hover .cardMotion,
+  .card:focus-within .cardMotion {
+    transform: none;
+    transition: none;
   }
 
   .cardPreview h2,
@@ -627,14 +693,20 @@
   .copy,
   .field,
   .card,
+  .cardMotion,
   .cardImage,
   .cardOverlay,
+  .title,
+  .intro,
   .progress span {
     transition: none;
   }
 
   .copy,
-  .field {
+  .field,
+  .cardMotion,
+  .title,
+  .intro {
     transform: none;
   }
 

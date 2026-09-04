@@ -27,6 +27,7 @@ function TypedText({ text }: { text: string }) {
 export function HeroSection({ services }: { services: HomeService[] }) {
   const heroRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const reactiveCardRef = useRef<HTMLElement | null>(null);
   const pointerFrameRef = useRef(0);
   const pointerPositionRef = useRef({ x: 0, y: 0 });
   const [activeIndex, setActiveIndex] = useState(0);
@@ -76,10 +77,19 @@ export function HeroSection({ services }: { services: HomeService[] }) {
     [],
   );
 
-  const activeService = services[previewIndex ?? activeIndex];
+  const selectedIndex = previewIndex ?? activeIndex;
+  const activeService = services[selectedIndex];
+
+  const resetReactiveCard = (card: HTMLElement | null) => {
+    if (!card) return;
+    card.style.setProperty('--card-push-x', '0px');
+    card.style.setProperty('--card-push-y', '0px');
+    card.style.setProperty('--card-tilt-x', '0deg');
+    card.style.setProperty('--card-tilt-y', '0deg');
+  };
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== 'mouse') return;
+    if (event.pointerType !== 'mouse' || isDesktop !== true) return;
     pointerPositionRef.current = { x: event.clientX, y: event.clientY };
 
     if (pointerFrameRef.current) return;
@@ -96,6 +106,36 @@ export function HeroSection({ services }: { services: HomeService[] }) {
       stage.style.setProperty('--pointer-y', `${y * 9}px`);
       stage.style.setProperty('--copy-x', `${x * -3.6}px`);
       stage.style.setProperty('--copy-y', `${y * -2.7}px`);
+      stage.style.setProperty('--title-push-x', `${x * 1.98}px`);
+      stage.style.setProperty('--title-push-y', `${y * 1.98}px`);
+      stage.style.setProperty('--title-skew', `${x * 1.92}deg`);
+      stage.style.setProperty('--subtitle-push-x', `${x * 1.2}px`);
+      stage.style.setProperty('--subtitle-push-y', `${y * 1.2}px`);
+
+      const target = event.target instanceof Element ? event.target : null;
+      const reactiveCard = target?.closest<HTMLElement>('[data-service-frame]') ?? null;
+
+      if (reactiveCardRef.current !== reactiveCard) {
+        resetReactiveCard(reactiveCardRef.current);
+        reactiveCardRef.current = reactiveCard;
+      }
+
+      if (reactiveCard) {
+        const cardBounds = reactiveCard.getBoundingClientRect();
+        const cardX = Math.min(
+          1,
+          Math.max(-1, ((pointerPositionRef.current.x - cardBounds.left) / cardBounds.width - 0.5) * 2),
+        );
+        const cardY = Math.min(
+          1,
+          Math.max(-1, ((pointerPositionRef.current.y - cardBounds.top) / cardBounds.height - 0.5) * 2),
+        );
+
+        reactiveCard.style.setProperty('--card-push-x', `${cardX * 10.45}px`);
+        reactiveCard.style.setProperty('--card-push-y', `${cardY * 10.45}px`);
+        reactiveCard.style.setProperty('--card-tilt-x', `${cardY * -3.5}deg`);
+        reactiveCard.style.setProperty('--card-tilt-y', `${cardX * 3.5}deg`);
+      }
     });
   };
 
@@ -108,11 +148,18 @@ export function HeroSection({ services }: { services: HomeService[] }) {
     stage.style.setProperty('--pointer-y', '0px');
     stage.style.setProperty('--copy-x', '0px');
     stage.style.setProperty('--copy-y', '0px');
+    stage.style.setProperty('--title-push-x', '0px');
+    stage.style.setProperty('--title-push-y', '0px');
+    stage.style.setProperty('--title-skew', '0deg');
+    stage.style.setProperty('--subtitle-push-x', '0px');
+    stage.style.setProperty('--subtitle-push-y', '0px');
+    resetReactiveCard(reactiveCardRef.current);
+    reactiveCardRef.current = null;
   };
 
   if (!activeService || serviceCount === 0) return null;
 
-  const progress = ((activeIndex + 1) / serviceCount) * 100;
+  const progress = ((selectedIndex + 1) / serviceCount) * 100;
 
   return (
     <section
@@ -161,56 +208,68 @@ export function HeroSection({ services }: { services: HomeService[] }) {
         <div className={styles.field} aria-label="DGTL 360 services">
           <p className={styles.scrollHint}>
             {isDesktop
-              ? `SCROLL TO EXPLORE · ${String(activeIndex + 1).padStart(2, '0')} / ${String(services.length).padStart(2, '0')}`
+              ? `SCROLL TO EXPLORE · ${String(selectedIndex + 1).padStart(2, '0')} / ${String(services.length).padStart(2, '0')}`
               : 'SERVICES · EIGHT DOORS'}
           </p>
           <div className={styles.serviceWheel}>
             {services.map((service, index) => {
               const position = getWheelPosition(index, activeIndex, serviceCount);
-              const isInteractive = isDesktop !== true || position === 'active';
+              const isInteractive = isDesktop !== true || position !== 'hidden';
               const shouldRenderImage = isDesktop === false || position !== 'hidden';
 
               return (
                 <article
                   className={styles.card}
                   data-position={position}
+                  data-service-frame
                   key={service.slug}
                   aria-hidden={isDesktop && position === 'hidden' ? true : undefined}
                   style={{ '--service-accent': service.accent } as CSSProperties}
                   onPointerEnter={() => {
                     if (isInteractive) setPreviewIndex(index);
                   }}
-                  onPointerLeave={() => setPreviewIndex(null)}
+                  onPointerLeave={(event) => {
+                    setPreviewIndex(null);
+                    resetReactiveCard(event.currentTarget);
+                    if (reactiveCardRef.current === event.currentTarget) {
+                      reactiveCardRef.current = null;
+                    }
+                  }}
                   onFocus={() => setPreviewIndex(index)}
-                  onBlur={() => setPreviewIndex(null)}
+                  onBlur={(event) => {
+                    setPreviewIndex(null);
+                    resetReactiveCard(event.currentTarget);
+                  }}
                 >
-                  {shouldRenderImage ? (
-                    <Image
-                      className={styles.cardImage}
-                      src={service.image}
-                      alt=""
-                      fill
-                      sizes="(max-width: 1000px) 92vw, 32vw"
-                      style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
-                      preload={index === 0}
-                    />
-                  ) : null}
-                  <span className={styles.imageShade} />
-                  <span className={styles.number} style={{ background: service.accent }}>
-                    {String(service.order).padStart(2, '0')}
-                  </span>
-                  <p className={styles.cardMeta}>{service.preview}</p>
-                  <div className={styles.cardPreview}>
-                    <h2>{service.label}</h2>
-                    <span>{service.cardHeadline}</span>
-                  </div>
-                  <div className={styles.cardOverlay}>
-                    <p className={styles.overlayKicker}>{String(service.order).padStart(2, '0')} / {service.preview}</p>
-                    <h2>{service.label}</h2>
-                    <TypedText text={service.detailDescription} />
-                    <Link href={`/services/${service.slug}`} tabIndex={isInteractive ? 0 : -1}>
-                      EXPLORE SERVICE ↗
-                    </Link>
+                  <div className={styles.cardMotion}>
+                    {shouldRenderImage ? (
+                      <Image
+                        className={styles.cardImage}
+                        src={service.image}
+                        alt=""
+                        fill
+                        sizes="(max-width: 1000px) 92vw, 32vw"
+                        style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
+                        preload={index === 0}
+                      />
+                    ) : null}
+                    <span className={styles.imageShade} />
+                    <span className={styles.number} style={{ background: service.accent }}>
+                      {String(service.order).padStart(2, '0')}
+                    </span>
+                    <p className={styles.cardMeta}>{service.preview}</p>
+                    <div className={styles.cardPreview}>
+                      <h2>{service.label}</h2>
+                      <span>{service.cardHeadline}</span>
+                    </div>
+                    <div className={styles.cardOverlay}>
+                      <p className={styles.overlayKicker}>{String(service.order).padStart(2, '0')} / {service.preview}</p>
+                      <h2>{service.label}</h2>
+                      <TypedText text={service.detailDescription} />
+                      <Link href={`/services/${service.slug}`} tabIndex={isInteractive ? 0 : -1}>
+                        EXPLORE SERVICE ↗
+                      </Link>
+                    </div>
                   </div>
                 </article>
               );
