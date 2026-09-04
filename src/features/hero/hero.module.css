@@ -243,8 +243,7 @@
   --card-push-y: 0px;
   --card-tilt-x: 0deg;
   --card-tilt-y: 0deg;
-  --top-ease: cubic-bezier(.3, .7, .2, 1);
-  --left-ease: cubic-bezier(.3, .7, .2, 1);
+  --orbit-ease: cubic-bezier(.45, 0, .55, 1);
   position: absolute;
   z-index: 1;
   top: 84%;
@@ -263,17 +262,15 @@
   transform-style: preserve-3d;
   will-change: top, left, opacity, filter, transform;
   transition:
-    top 1150ms var(--top-ease),
-    left 1150ms var(--left-ease),
-    opacity 240ms ease,
-    filter 820ms ease,
-    box-shadow 820ms ease,
-    transform 1150ms cubic-bezier(.16, 1, .3, 1);
+    top 1250ms var(--orbit-ease),
+    left 1250ms var(--orbit-ease),
+    opacity 440ms ease-in-out,
+    filter 900ms ease-in-out,
+    box-shadow 900ms ease-in-out,
+    transform 1250ms var(--orbit-ease);
 }
 
 .card[data-position='active'] {
-  --top-ease: cubic-bezier(.58, .02, .32, 1);
-  --left-ease: cubic-bezier(.08, .82, .18, 1);
   z-index: 4;
   top: 52%;
   left: 41%;
@@ -284,8 +281,6 @@
 }
 
 .card[data-position='previous'] {
-  --top-ease: cubic-bezier(.08, .82, .18, 1);
-  --left-ease: cubic-bezier(.58, .02, .32, 1);
   z-index: 2;
   top: 20%;
   left: 84%;
@@ -296,8 +291,6 @@
 }
 
 .card[data-position='next'] {
-  --top-ease: cubic-bezier(.3, .72, .24, 1);
-  --left-ease: cubic-bezier(.3, .72, .24, 1);
   z-index: 2;
   top: 80%;
   left: 84%;
@@ -310,13 +303,13 @@
 .card[data-position='hidden'] {
   visibility: hidden;
   transition:
-    top 1150ms cubic-bezier(.3, .72, .24, 1),
-    left 1150ms cubic-bezier(.3, .72, .24, 1),
-    opacity 240ms ease,
-    filter 820ms ease,
-    box-shadow 820ms ease,
-    transform 1150ms cubic-bezier(.16, 1, .3, 1),
-    visibility 0s linear 1150ms;
+    top 1250ms var(--orbit-ease),
+    left 1250ms var(--orbit-ease),
+    opacity 440ms ease-in-out,
+    filter 900ms ease-in-out,
+    box-shadow 900ms ease-in-out,
+    transform 1250ms var(--orbit-ease),
+    visibility 0s linear 1250ms;
 }
 
 .cardMotion {
@@ -326,7 +319,7 @@
   border-radius: inherit;
   transform: perspective(1100px) translate3d(0, 0, 0) rotateX(0) rotateY(0) scale(1);
   transform-style: preserve-3d;
-  transition: transform 120ms linear, opacity 180ms ease;
+  transition: transform 220ms ease-out, opacity 260ms ease-in-out;
   will-change: transform;
 }
 
@@ -352,7 +345,7 @@
 
 .cardImage {
   filter: saturate(0.651) brightness(1) contrast(1.04);
-  transition: filter 300ms ease, transform 700ms cubic-bezier(.2, .75, .15, 1);
+  transition: filter 420ms ease-in-out, transform 900ms ease-in-out;
 }
 
 .card[data-position='active'] .cardImage {
@@ -363,7 +356,7 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.92));
-  transition: background 300ms ease;
+  transition: background 420ms ease-in-out;
 }
 
 .number {
@@ -432,7 +425,7 @@
   justify-content: flex-end;
   background: linear-gradient(180deg, rgba(4, 5, 6, 0.96), #030405 70%);
   transform: translateY(102%);
-  transition: transform 780ms cubic-bezier(.2, .78, .15, 1);
+  transition: transform 780ms ease-in-out;
 }
 
 .card[data-position='active']:hover .cardOverlay,
@@ -490,7 +483,7 @@
   display: block;
   height: 100%;
   background: var(--color-cyan);
-  transition: width 300ms ease;
+  transition: width 460ms ease-in-out;
 }
 
 @keyframes detail-reveal {

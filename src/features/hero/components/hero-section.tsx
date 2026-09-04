@@ -9,6 +9,10 @@ import { CursorVideoBackground } from './cursor-video-background.client';
 import styles from '../hero.module.css';
 
 const DESKTOP_QUERY = '(min-width: 1001px)';
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+const SCROLL_DAMPING = 0.11;
+const SCROLL_SETTLE_THRESHOLD = 0.0005;
+const SERVICE_SCROLL_STEP = 90;
 
 function getWheelPosition(index: number, activeIndex: number, total: number) {
   const previous = (activeIndex - 1 + total) % total;
@@ -38,22 +42,56 @@ export function HeroSection({ services }: { services: HomeService[] }) {
   useEffect(() => {
     const hero = heroRef.current;
     const media = window.matchMedia(DESKTOP_QUERY);
+    const reducedMotion = window.matchMedia(REDUCED_MOTION_QUERY);
     if (!hero) return;
 
     let frame = 0;
+    let targetProgress = 0;
+    let smoothedProgress = 0;
+    let hasInitialProgress = false;
 
-    const updateMode = () => setIsDesktop(media.matches);
+    const updateActiveService = (progress: number) => {
+      const nextIndex = Math.round(progress * (serviceCount - 1));
+      setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+    };
+
+    const easeTowardScrollTarget = () => {
+      frame = 0;
+      const remaining = targetProgress - smoothedProgress;
+
+      if (Math.abs(remaining) <= SCROLL_SETTLE_THRESHOLD) {
+        smoothedProgress = targetProgress;
+        updateActiveService(smoothedProgress);
+        return;
+      }
+
+      smoothedProgress += remaining * SCROLL_DAMPING;
+      updateActiveService(smoothedProgress);
+      frame = requestAnimationFrame(easeTowardScrollTarget);
+    };
+
     const updateFromScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        if (!media.matches) return;
+      if (!media.matches) return;
 
-        const bounds = hero.getBoundingClientRect();
-        const scrollDistance = Math.max(hero.offsetHeight - window.innerHeight, 1);
-        const progress = Math.min(1, Math.max(0, -bounds.top / scrollDistance));
-        const nextIndex = Math.round(progress * (serviceCount - 1));
-        setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
-      });
+      const bounds = hero.getBoundingClientRect();
+      const scrollDistance = Math.max(hero.offsetHeight - window.innerHeight, 1);
+      targetProgress = Math.min(1, Math.max(0, -bounds.top / scrollDistance));
+
+      if (!hasInitialProgress || reducedMotion.matches) {
+        hasInitialProgress = true;
+        smoothedProgress = targetProgress;
+        cancelAnimationFrame(frame);
+        frame = 0;
+        updateActiveService(smoothedProgress);
+        return;
+      }
+
+      if (!frame) frame = requestAnimationFrame(easeTowardScrollTarget);
+    };
+
+    const updateMode = () => {
+      setIsDesktop(media.matches);
+      updateFromScroll();
     };
 
     updateMode();
@@ -61,12 +99,14 @@ export function HeroSection({ services }: { services: HomeService[] }) {
     window.addEventListener('scroll', updateFromScroll, { passive: true });
     window.addEventListener('resize', updateFromScroll, { passive: true });
     media.addEventListener('change', updateMode);
+    reducedMotion.addEventListener('change', updateFromScroll);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener('scroll', updateFromScroll);
       window.removeEventListener('resize', updateFromScroll);
       media.removeEventListener('change', updateMode);
+      reducedMotion.removeEventListener('change', updateFromScroll);
     };
   }, [serviceCount]);
 
@@ -167,7 +207,7 @@ export function HeroSection({ services }: { services: HomeService[] }) {
       className={styles.hero}
       id="top"
       aria-labelledby="hero-title"
-      style={{ '--service-scroll-height': `${100 + (serviceCount - 1) * 72}svh` } as CSSProperties}
+      style={{ '--service-scroll-height': `${100 + (serviceCount - 1) * SERVICE_SCROLL_STEP}svh` } as CSSProperties}
     >
       <div
         ref={stageRef}
