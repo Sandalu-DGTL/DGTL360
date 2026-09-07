@@ -1,10 +1,11 @@
 'use client';
 
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
+import type { CSSProperties } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { HomeService } from '../../services/types/service.types';
+import { CursorElementPhysics } from './cursor-element-physics.client';
 import { CursorVideoBackground } from './cursor-video-background.client';
 import styles from '../hero.module.css';
 
@@ -30,10 +31,6 @@ function TypedText({ text }: { text: string }) {
 
 export function HeroSection({ services }: { services: HomeService[] }) {
   const heroRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const reactiveCardRef = useRef<HTMLElement | null>(null);
-  const pointerFrameRef = useRef(0);
-  const pointerPositionRef = useRef({ x: 0, y: 0 });
   const [activeIndex, setActiveIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
@@ -110,92 +107,8 @@ export function HeroSection({ services }: { services: HomeService[] }) {
     };
   }, [serviceCount]);
 
-  useEffect(
-    () => () => {
-      cancelAnimationFrame(pointerFrameRef.current);
-    },
-    [],
-  );
-
   const selectedIndex = previewIndex ?? activeIndex;
   const activeService = services[selectedIndex];
-
-  const resetReactiveCard = (card: HTMLElement | null) => {
-    if (!card) return;
-    card.style.setProperty('--card-push-x', '0px');
-    card.style.setProperty('--card-push-y', '0px');
-    card.style.setProperty('--card-tilt-x', '0deg');
-    card.style.setProperty('--card-tilt-y', '0deg');
-  };
-
-  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== 'mouse' || isDesktop !== true) return;
-    pointerPositionRef.current = { x: event.clientX, y: event.clientY };
-
-    if (pointerFrameRef.current) return;
-
-    pointerFrameRef.current = requestAnimationFrame(() => {
-      pointerFrameRef.current = 0;
-      const stage = stageRef.current;
-      if (!stage) return;
-
-      const bounds = stage.getBoundingClientRect();
-      const x = (pointerPositionRef.current.x - bounds.left) / bounds.width - 0.5;
-      const y = (pointerPositionRef.current.y - bounds.top) / bounds.height - 0.5;
-      stage.style.setProperty('--pointer-x', `${x * 12}px`);
-      stage.style.setProperty('--pointer-y', `${y * 9}px`);
-      stage.style.setProperty('--copy-x', `${x * -3.6}px`);
-      stage.style.setProperty('--copy-y', `${y * -2.7}px`);
-      stage.style.setProperty('--title-push-x', `${x * 1.98}px`);
-      stage.style.setProperty('--title-push-y', `${y * 1.98}px`);
-      stage.style.setProperty('--title-skew', `${x * 1.92}deg`);
-      stage.style.setProperty('--subtitle-push-x', `${x * 1.2}px`);
-      stage.style.setProperty('--subtitle-push-y', `${y * 1.2}px`);
-
-      const target = event.target instanceof Element ? event.target : null;
-      const reactiveCard = target?.closest<HTMLElement>('[data-service-frame]') ?? null;
-
-      if (reactiveCardRef.current !== reactiveCard) {
-        resetReactiveCard(reactiveCardRef.current);
-        reactiveCardRef.current = reactiveCard;
-      }
-
-      if (reactiveCard) {
-        const cardBounds = reactiveCard.getBoundingClientRect();
-        const cardX = Math.min(
-          1,
-          Math.max(-1, ((pointerPositionRef.current.x - cardBounds.left) / cardBounds.width - 0.5) * 2),
-        );
-        const cardY = Math.min(
-          1,
-          Math.max(-1, ((pointerPositionRef.current.y - cardBounds.top) / cardBounds.height - 0.5) * 2),
-        );
-
-        reactiveCard.style.setProperty('--card-push-x', `${cardX * 10.45}px`);
-        reactiveCard.style.setProperty('--card-push-y', `${cardY * 10.45}px`);
-        reactiveCard.style.setProperty('--card-tilt-x', `${cardY * -3.5}deg`);
-        reactiveCard.style.setProperty('--card-tilt-y', `${cardX * 3.5}deg`);
-      }
-    });
-  };
-
-  const resetPointer = () => {
-    cancelAnimationFrame(pointerFrameRef.current);
-    pointerFrameRef.current = 0;
-    const stage = stageRef.current;
-    if (!stage) return;
-    stage.style.setProperty('--pointer-x', '0px');
-    stage.style.setProperty('--pointer-y', '0px');
-    stage.style.setProperty('--copy-x', '0px');
-    stage.style.setProperty('--copy-y', '0px');
-    stage.style.setProperty('--title-push-x', '0px');
-    stage.style.setProperty('--title-push-y', '0px');
-    stage.style.setProperty('--title-skew', '0deg');
-    stage.style.setProperty('--subtitle-push-x', '0px');
-    stage.style.setProperty('--subtitle-push-y', '0px');
-    resetReactiveCard(reactiveCardRef.current);
-    reactiveCardRef.current = null;
-  };
 
   if (!activeService || serviceCount === 0) return null;
 
@@ -209,23 +122,19 @@ export function HeroSection({ services }: { services: HomeService[] }) {
       aria-labelledby="hero-title"
       style={{ '--service-scroll-height': `${100 + (serviceCount - 1) * SERVICE_SCROLL_STEP}svh` } as CSSProperties}
     >
-      <div
-        ref={stageRef}
-        className={styles.stage}
-        onPointerMove={handlePointerMove}
-        onPointerLeave={resetPointer}
-      >
+      <div className={styles.stage} data-cursor-physics-root>
         <CursorVideoBackground />
+        <CursorElementPhysics />
         <div className={styles.gridTexture} aria-hidden="true" />
 
         <div className={styles.copy}>
           <p className={styles.eyebrow}>ONE CREW · EIGHT DOORS</p>
-          <h1 id="hero-title" className={styles.title}>
+          <h1 id="hero-title" className={styles.title} data-cursor-title-surface>
             <span>MAKE THE THING.</span>
             <span>MAKE IT LAND.</span>
             <span>MAKE IT WORK.</span>
           </h1>
-          <p className={styles.intro}>
+          <p className={styles.intro} data-cursor-subtitle-surface>
             Brand, content, product, growth and the systems underneath—one Colombo crew
             from first sketch to live. Poddak less theatre, much more traction.
           </p>
@@ -261,27 +170,22 @@ export function HeroSection({ services }: { services: HomeService[] }) {
                 <article
                   className={styles.card}
                   data-position={position}
-                  data-service-frame
+                  data-cursor-card
                   key={service.slug}
                   aria-hidden={isDesktop && position === 'hidden' ? true : undefined}
                   style={{ '--service-accent': service.accent } as CSSProperties}
                   onPointerEnter={() => {
                     if (isInteractive) setPreviewIndex(index);
                   }}
-                  onPointerLeave={(event) => {
+                  onPointerLeave={() => {
                     setPreviewIndex(null);
-                    resetReactiveCard(event.currentTarget);
-                    if (reactiveCardRef.current === event.currentTarget) {
-                      reactiveCardRef.current = null;
-                    }
                   }}
                   onFocus={() => setPreviewIndex(index)}
-                  onBlur={(event) => {
+                  onBlur={() => {
                     setPreviewIndex(null);
-                    resetReactiveCard(event.currentTarget);
                   }}
                 >
-                  <div className={styles.cardMotion}>
+                  <div className={styles.cardMotion} data-cursor-card-surface>
                     {shouldRenderImage ? (
                       <Image
                         className={styles.cardImage}
