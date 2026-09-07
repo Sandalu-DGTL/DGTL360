@@ -8,13 +8,6 @@ export function SiteFooter() {
         <strong>DGTL <span>360</span></strong>
         <p>COLOMBO + ANYWHERE</p>
       </div>
-      <div className={styles.cta}>
-        <p>HAVE A PROBLEM WORTH SOLVING?</p>
-        <div>
-          <h2>Let’s make the<br />next thing work.</h2>
-          <a href="mailto:info@dgtl.lk">info@dgtl.lk ↗</a>
-        </div>
-      </div>
       <div className={styles.links}>
         <nav aria-label="Footer navigation">
           <Link href="/services/production">Services</Link>

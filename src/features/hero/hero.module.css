@@ -1,8 +1,4 @@
 .hero {
-  --pointer-x: 0px;
-  --pointer-y: 0px;
-  --copy-x: 0px;
-  --copy-y: 0px;
   position: relative;
   height: var(--service-scroll-height);
   isolation: isolate;
@@ -17,19 +13,10 @@
   min-height: 580px;
   overflow: hidden;
   isolation: isolate;
+  clip-path: inset(0);
   background:
     radial-gradient(circle at 70% 35%, rgba(0, 174, 232, 0.08), transparent 28%),
     #161a1d;
-}
-
-.cursorVideoCanvas {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-  pointer-events: none;
 }
 
 .gridTexture {
@@ -53,16 +40,13 @@
   display: flex;
   width: min(34vw, 570px);
   flex-direction: column;
-  transform: translate3d(var(--copy-x), var(--copy-y), 0);
-  transition: transform 260ms ease-out;
 }
 
 .eyebrow,
 .serviceLabel,
 .activeService a,
 .copyFooter,
-.cardOverlay a,
-.overlayKicker {
+.cardOverlay a {
   font: 700 0.68rem/1.2 var(--font-mono), monospace;
   letter-spacing: 0.1em;
 }
@@ -76,26 +60,17 @@
   margin: 0;
   font: 400 clamp(3rem, 4.6vw, 5.9rem)/0.78 var(--font-display);
   letter-spacing: -0.065em;
-  transform:
-    perspective(1100px)
-    translate3d(var(--cursor-title-x, 0), var(--cursor-title-y, 0), 0)
-    rotateX(var(--cursor-title-tilt-x, 0))
-    rotateY(var(--cursor-title-tilt-y, 0))
-    skewX(var(--cursor-title-skew, 0));
-  transform-style: preserve-3d;
-  transition: transform 90ms linear;
-  will-change: transform;
 }
 
-.title span {
+.title [data-cursor-title-surface] > span {
   display: block;
 }
 
-.title span:nth-child(-n + 2) {
+.title [data-cursor-title-surface] > span:nth-child(-n + 2) {
   color: var(--color-cyan);
 }
 
-.title span:last-child {
+.title [data-cursor-title-surface] > span:last-child {
   color: #f3f1ed;
 }
 
@@ -105,9 +80,6 @@
   color: var(--color-muted);
   font-size: clamp(0.92rem, 1.02vw, 1.18rem);
   line-height: 1.45;
-  transform: translate3d(var(--cursor-subtitle-x, 0), var(--cursor-subtitle-y, 0), 0);
-  transition: transform 120ms linear;
-  will-change: transform;
 }
 
 .activeService {
@@ -153,8 +125,6 @@
   position: absolute;
   z-index: 4;
   inset: 5.4rem 0 2rem 39vw;
-  transform: translate3d(var(--pointer-x), var(--pointer-y), 0);
-  transition: transform 260ms ease-out;
 }
 
 .scrollHint {
@@ -204,12 +174,8 @@
 }
 
 .card {
-  --cursor-card-x: 0px;
-  --cursor-card-y: 0px;
-  --cursor-card-tilt-x: 0deg;
-  --cursor-card-tilt-y: 0deg;
-  --orbit-ease: cubic-bezier(.45, 0, .55, 1);
-  --orbit-duration: 780ms;
+  --orbit-ease: cubic-bezier(.22, 1, .36, 1);
+  --orbit-duration: 260ms;
   position: absolute;
   z-index: 1;
   top: 84%;
@@ -230,9 +196,9 @@
   transition:
     top var(--orbit-duration) var(--orbit-ease),
     left var(--orbit-duration) var(--orbit-ease),
-    opacity 280ms ease-in-out,
-    filter 560ms ease-in-out,
-    box-shadow 560ms ease-in-out,
+    opacity 180ms ease-out,
+    filter var(--orbit-duration) ease-out,
+    box-shadow var(--orbit-duration) ease-out,
     transform var(--orbit-duration) var(--orbit-ease);
 }
 
@@ -271,11 +237,34 @@
   transition:
     top var(--orbit-duration) var(--orbit-ease),
     left var(--orbit-duration) var(--orbit-ease),
-    opacity 280ms ease-in-out,
-    filter 560ms ease-in-out,
-    box-shadow 560ms ease-in-out,
+    opacity 180ms ease-out,
+    filter var(--orbit-duration) ease-out,
+    box-shadow var(--orbit-duration) ease-out,
     transform var(--orbit-duration) var(--orbit-ease),
     visibility 0s linear var(--orbit-duration);
+}
+
+/* The spring owns the outer orbit. Hover and cursor physics use inner layers. */
+@media (min-width: 1001px) and (prefers-reduced-motion: no-preference) {
+  .hero[data-orbit-animated] .card {
+    top: var(--orbit-top);
+    left: var(--orbit-left);
+    opacity: var(--orbit-opacity);
+    visibility: var(--orbit-visibility);
+    transform: var(--orbit-transform);
+    transition: filter 320ms ease-in-out, box-shadow 320ms ease-in-out;
+  }
+
+  .hero[data-orbit-animated] .card:hover,
+  .hero[data-orbit-animated] .card:focus-within {
+    opacity: 1;
+  }
+}
+
+.cardPhysics {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
 }
 
 .cardMotion {
@@ -291,12 +280,7 @@
 
 .card:hover .cardMotion,
 .card:focus-within .cardMotion {
-  transform:
-    perspective(1100px)
-    translate3d(var(--cursor-card-x), var(--cursor-card-y), 0)
-    rotateX(var(--cursor-card-tilt-x))
-    rotateY(var(--cursor-card-tilt-y))
-    scale(1.018);
+  transform: scale(1.018);
 }
 
 .card[data-position='previous']:hover,
@@ -449,7 +433,10 @@
   display: block;
   height: 100%;
   background: var(--color-cyan);
-  transition: width 260ms ease-in-out;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(var(--wheel-progress, 0.125));
+  will-change: transform;
 }
 
 @keyframes detail-reveal {
@@ -476,13 +463,7 @@
     display: none;
   }
 
-  .cursorVideoCanvas {
-    position: fixed;
-    width: 100vw;
-    height: 100svh;
-  }
-
-  .copy {
+    .copy {
     position: relative;
     inset: auto;
     width: min(100%, 660px);
