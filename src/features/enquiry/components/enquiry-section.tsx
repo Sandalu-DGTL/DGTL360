@@ -30,12 +30,14 @@ export function EnquirySection({ compact = false }: { compact?: boolean }) {
       </p>
       <EnquiryForm compact={compact} />
       <a className={styles.email} href="mailto:info@dgtl.lk">info@dgtl.lk ↗</a>
-      <address className={styles.address}>
-        <span>OUR ADDRESS</span>
-        Mode Residence<br />
-        3 Beach Rd,<br />
-        Dehiwala-Mount Lavinia
-      </address>
+      {compact ? (
+        <address className={styles.address}>
+          <span>OUR ADDRESS</span>
+          Mode Residence,<br />
+          3 Beach Rd,<br />
+          Dehiwala-Mount Lavinia
+        </address>
+      ) : null}
     </section>
   );
 }

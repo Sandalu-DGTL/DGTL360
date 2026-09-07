@@ -6,14 +6,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { HomeService } from '../../services/types/service.types';
 import { CursorElementPhysics } from './cursor-element-physics.client';
-import { CursorVideoBackground } from './cursor-video-background.client';
+import { CursorVideoReveal } from './cursor-video-reveal.client';
+import '../cursor-video-reveal.css';
 import styles from '../hero.module.css';
+import { advanceWheel, wheelPose, wheelProgress } from '../motion/service-wheel';
 
 const DESKTOP_QUERY = '(min-width: 1001px)';
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-const SCROLL_DAMPING = 0.18;
-const SCROLL_SETTLE_THRESHOLD = 0.0005;
-const SERVICE_SCROLL_STEP = 72;
+const SCROLL_SETTLE_THRESHOLD = 0.001;
+const SERVICE_SCROLL_STEP = 36;
 
 function getWheelPosition(index: number, activeIndex: number, total: number) {
   const previous = (activeIndex - 1 + total) % total;
@@ -42,68 +43,93 @@ export function HeroSection({ services }: { services: HomeService[] }) {
     const reducedMotion = window.matchMedia(REDUCED_MOTION_QUERY);
     if (!hero) return;
 
+    const cards = Array.from(hero.querySelectorAll<HTMLElement>('[data-cursor-card]'));
     let frame = 0;
-    let targetProgress = 0;
-    let smoothedProgress = 0;
-    let hasInitialProgress = false;
+    let target = 0;
+    let motion = { position: 0, velocity: 0 };
+    let initialized = false;
+    let lastTime = 0;
 
-    const updateActiveService = (progress: number) => {
-      const nextIndex = Math.round(progress * (serviceCount - 1));
-      setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+    const paint = () => {
+      hero.style.setProperty('--wheel-progress', String(wheelProgress(motion.position, serviceCount)));
+      const nearest = Math.min(serviceCount - 1, Math.max(0, Math.round(motion.position)));
+      setActiveIndex((current) => current === nearest ? current : nearest);
+      cards.forEach((card, index) => {
+        const pose = wheelPose(index, motion.position, serviceCount);
+        card.style.setProperty('--orbit-top', `${pose.top}%`);
+        card.style.setProperty('--orbit-left', `${pose.left}%`);
+        card.style.setProperty('--orbit-opacity', String(pose.opacity));
+        card.style.setProperty('--orbit-transform', pose.transform);
+        card.style.setProperty('--orbit-visibility', pose.visible ? 'visible' : 'hidden');
+      });
     };
 
-    const easeTowardScrollTarget = () => {
+    const animate = (time: number) => {
       frame = 0;
-      const remaining = targetProgress - smoothedProgress;
-
-      if (Math.abs(remaining) <= SCROLL_SETTLE_THRESHOLD) {
-        smoothedProgress = targetProgress;
-        updateActiveService(smoothedProgress);
+      const dt = Math.min((time - lastTime) / 1000, 0.05);
+      lastTime = time;
+      motion = advanceWheel(motion, target, dt);
+      if (Math.abs(target - motion.position) < SCROLL_SETTLE_THRESHOLD
+        && Math.abs(motion.velocity) < SCROLL_SETTLE_THRESHOLD) {
+        motion = { position: target, velocity: 0 };
+        paint();
         return;
       }
-
-      smoothedProgress += remaining * SCROLL_DAMPING;
-      updateActiveService(smoothedProgress);
-      frame = requestAnimationFrame(easeTowardScrollTarget);
+      paint();
+      frame = requestAnimationFrame(animate);
     };
 
     const updateFromScroll = () => {
       if (!media.matches) return;
-
       const bounds = hero.getBoundingClientRect();
-      const scrollDistance = Math.max(hero.offsetHeight - window.innerHeight, 1);
-      targetProgress = Math.min(1, Math.max(0, -bounds.top / scrollDistance));
-
-      if (!hasInitialProgress || reducedMotion.matches) {
-        hasInitialProgress = true;
-        smoothedProgress = targetProgress;
+      const distance = Math.max(hero.offsetHeight - window.innerHeight, 1);
+      const progress = Math.min(1, Math.max(0, -bounds.top / distance));
+      target = progress * (serviceCount - 1);
+      if (!initialized || reducedMotion.matches || document.hidden) {
+        initialized = true;
         cancelAnimationFrame(frame);
         frame = 0;
-        updateActiveService(smoothedProgress);
+        motion = { position: target, velocity: 0 };
+        paint();
         return;
       }
-
-      if (!frame) frame = requestAnimationFrame(easeTowardScrollTarget);
+      if (!frame) {
+        lastTime = performance.now();
+        frame = requestAnimationFrame(animate);
+      }
     };
 
     const updateMode = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      initialized = false;
       setIsDesktop(media.matches);
+      if (media.matches && !reducedMotion.matches) hero.dataset.orbitAnimated = 'true';
+      else delete hero.dataset.orbitAnimated;
       updateFromScroll();
     };
 
     updateMode();
-    updateFromScroll();
     window.addEventListener('scroll', updateFromScroll, { passive: true });
     window.addEventListener('resize', updateFromScroll, { passive: true });
+    document.addEventListener('visibilitychange', updateFromScroll);
     media.addEventListener('change', updateMode);
-    reducedMotion.addEventListener('change', updateFromScroll);
+    reducedMotion.addEventListener('change', updateMode);
 
     return () => {
       cancelAnimationFrame(frame);
+      delete hero.dataset.orbitAnimated;
+      hero.style.removeProperty('--wheel-progress');
+      cards.forEach((card) => {
+        ['top', 'left', 'opacity', 'transform', 'visibility'].forEach((property) => {
+          card.style.removeProperty(`--orbit-${property}`);
+        });
+      });
       window.removeEventListener('scroll', updateFromScroll);
       window.removeEventListener('resize', updateFromScroll);
+      document.removeEventListener('visibilitychange', updateFromScroll);
       media.removeEventListener('change', updateMode);
-      reducedMotion.removeEventListener('change', updateFromScroll);
+      reducedMotion.removeEventListener('change', updateMode);
     };
   }, [serviceCount]);
 
@@ -111,8 +137,6 @@ export function HeroSection({ services }: { services: HomeService[] }) {
   const activeService = services[selectedIndex];
 
   if (!activeService || serviceCount === 0) return null;
-
-  const progress = ((selectedIndex + 1) / serviceCount) * 100;
 
   return (
     <section
@@ -123,20 +147,24 @@ export function HeroSection({ services }: { services: HomeService[] }) {
       style={{ '--service-scroll-height': `${100 + (serviceCount - 1) * SERVICE_SCROLL_STEP}svh` } as CSSProperties}
     >
       <div className={styles.stage} data-cursor-physics-root>
-        <CursorVideoBackground />
+        <CursorVideoReveal videoSrc="/assets/video/mycelial-transport.mp4" />
         <CursorElementPhysics />
         <div className={styles.gridTexture} aria-hidden="true" />
 
         <div className={styles.copy}>
           <p className={styles.eyebrow}>ONE CREW · EIGHT DOORS</p>
-          <h1 id="hero-title" className={styles.title} data-cursor-title-surface>
-            <span>MAKE THE THING.</span>
-            <span>MAKE IT LAND.</span>
-            <span>MAKE IT WORK.</span>
+          <h1 id="hero-title" className={styles.title}>
+            <span data-cursor-title-surface>
+              <span>MAKE THE THING.</span>
+              <span>MAKE IT LAND.</span>
+              <span>MAKE IT WORK.</span>
+            </span>
           </h1>
-          <p className={styles.intro} data-cursor-subtitle-surface>
-            Brand, content, product, growth and the systems underneath—one Colombo crew
-            from first sketch to live. Poddak less theatre, much more traction.
+          <p className={styles.intro}>
+            <span data-cursor-subtitle-surface>
+              Brand, content, product, growth and the systems underneath—one Colombo crew
+              from first sketch to live. Poddak less theatre, much more traction.
+            </span>
           </p>
 
           <div className={styles.activeService} aria-live="polite">
@@ -144,7 +172,6 @@ export function HeroSection({ services }: { services: HomeService[] }) {
             <p className={styles.serviceLabel}>
               {String(activeService.order).padStart(2, '0')} · {activeService.label}
             </p>
-            <p>{activeService.summary}</p>
             <Link href={`/services/${activeService.slug}`}>EXPLORE THIS SERVICE ↗</Link>
           </div>
 
@@ -164,7 +191,7 @@ export function HeroSection({ services }: { services: HomeService[] }) {
             {services.map((service, index) => {
               const position = getWheelPosition(index, activeIndex, serviceCount);
               const isInteractive = isDesktop !== true || position !== 'hidden';
-              const shouldRenderImage = isDesktop === false || position !== 'hidden';
+              const shouldRenderImage = isDesktop !== null || position !== 'hidden';
 
               return (
                 <article
@@ -185,34 +212,35 @@ export function HeroSection({ services }: { services: HomeService[] }) {
                     setPreviewIndex(null);
                   }}
                 >
-                  <div className={styles.cardMotion} data-cursor-card-surface>
-                    {shouldRenderImage ? (
-                      <Image
-                        className={styles.cardImage}
-                        src={service.image}
-                        alt=""
-                        fill
-                        sizes="(max-width: 1000px) 92vw, 32vw"
-                        style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
-                        preload={index === 0}
-                      />
-                    ) : null}
-                    <span className={styles.imageShade} />
-                    <span className={styles.number} style={{ background: service.accent }}>
-                      {String(service.order).padStart(2, '0')}
-                    </span>
-                    <p className={styles.cardMeta}>{service.preview}</p>
-                    <div className={styles.cardPreview}>
-                      <h2>{service.label}</h2>
-                      <span>{service.cardHeadline}</span>
-                    </div>
-                    <div className={styles.cardOverlay}>
-                      <p className={styles.overlayKicker}>{String(service.order).padStart(2, '0')} / {service.preview}</p>
-                      <h2>{service.label}</h2>
-                      <TypedText text={service.detailDescription} />
-                      <Link href={`/services/${service.slug}`} tabIndex={isInteractive ? 0 : -1}>
-                        EXPLORE SERVICE ↗
-                      </Link>
+                  <div className={styles.cardPhysics} data-cursor-card-surface>
+                    <div className={styles.cardMotion}>
+                      {shouldRenderImage ? (
+                        <Image
+                          className={styles.cardImage}
+                          src={service.image}
+                          alt=""
+                          fill
+                          sizes="(max-width: 1000px) 92vw, 32vw"
+                          style={{ objectFit: 'cover', objectPosition: service.imagePosition }}
+                          preload={index === 0}
+                        />
+                      ) : null}
+                      <span className={styles.imageShade} />
+                      <span className={styles.number} style={{ background: service.accent }}>
+                        {String(service.order).padStart(2, '0')}
+                      </span>
+                      <p className={styles.cardMeta}>{service.preview}</p>
+                      <div className={styles.cardPreview}>
+                        <h2>{service.label}</h2>
+                        <span>{service.cardHeadline}</span>
+                      </div>
+                      <div className={styles.cardOverlay}>
+                        <h2>{service.label}</h2>
+                        <TypedText text={service.detailDescription} />
+                        <Link href={`/services/${service.slug}`} tabIndex={isInteractive ? 0 : -1}>
+                          EXPLORE SERVICE ↗
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </article>
@@ -222,7 +250,7 @@ export function HeroSection({ services }: { services: HomeService[] }) {
         </div>
 
         <div className={styles.progress} aria-hidden="true">
-          <span style={{ width: `${progress}%` }} />
+          <span />
         </div>
       </div>
     </section>

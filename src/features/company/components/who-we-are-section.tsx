@@ -16,9 +16,9 @@ export function WhoWeAreSection() {
       <p className={styles.kicker}>INTEGRATED BUSINESS SOLUTIONS</p>
       <h2 id="who-title">WHO<br />WE ARE</h2>
       <div className={styles.aboutCopy}>
-        <p className={styles.lead}>We are a like-minded collective built around shared thinking, open process and a better standard of problem-solving—for Sri Lanka and the wider world.</p>
-        <p>Our arsenal is deliberately broad, but our realm is digital. We work across production, brand and strategy, web and app development, digital services, events and experiences, and agentic AI—assembling the right disciplines around every brief.</p>
-        <p>How we deliver is never fixed. We combine agentic models with experienced makers and technical advisors at every stage. The result is technology that strengthens human judgement and solutions built to move organisations and personal pursuits forward.</p>
+        <p className={styles.lead}>We are a 360° creative, technology, and business solutions agency that transforms ideas into impactful brands and scalable businesses.</p>
+        <p>By combining strategy, design, marketing, technology, AI, media production, and event management, we deliver end-to-end solutions that help organizations launch, grow, and lead in an ever-evolving digital world.</p>
+        <p>Our focus is simple: create measurable value through innovation, creativity, and execution excellence.</p>
       </div>
       <ul className={styles.capabilities} aria-label="Our capabilities">
         {capabilities.map((capability) => <li key={capability}>{capability}</li>)}
