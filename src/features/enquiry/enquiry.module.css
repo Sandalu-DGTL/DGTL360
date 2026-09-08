@@ -484,3 +484,95 @@
     border-radius: 14px;
   }
 }
+
+/* Distinct form and information panels for the service contact area. */
+.splitContact.compact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.75rem);
+  background: #080b0d;
+}
+
+.formPanel,
+.detailsPanel {
+  min-width: 0;
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 16px;
+}
+
+.formPanel { background: #0d1215; }
+.detailsPanel { background: #070a0c; }
+
+.splitContact.compact h2 {
+  max-width: 15ch;
+  margin: .85rem 0 1rem;
+  font-size: clamp(1.6rem, 2.3vw, 2.25rem);
+  line-height: 1.2;
+}
+
+.splitContact.compact .kicker {
+  color: var(--service-accent, var(--color-cyan));
+}
+
+.splitContact.compact .form,
+.splitContact.compact .formStatus {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+.splitContact.compact .form {
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.splitContact.compact .form input,
+.splitContact.compact .form textarea {
+  min-height: 44px;
+  padding: .65rem .7rem;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 6px;
+  background: #070a0c;
+  font-size: 16px;
+}
+
+.splitContact.compact .form textarea { min-height: 96px; }
+.splitContact.compact .form button {
+  width: auto;
+  min-height: 44px;
+  padding: .75rem 1.2rem;
+  border: 1px solid #f3f1ed;
+  background: #f3f1ed;
+  box-shadow: none;
+}
+
+.splitContact.compact .form button:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+.splitContact.compact .copy {
+  color: rgba(255,255,255,.7);
+  font-size: .88rem;
+}
+
+.splitContact.compact .email {
+  margin-top: 1.25rem;
+  font-size: .75rem;
+}
+
+.splitContact.compact .address {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,.12);
+  font-size: .75rem;
+}
+
+/* The service sidebar becomes full-width at the tablet breakpoint. */
+@media (min-width: 701px) and (max-width: 1000px) {
+  .splitContact.compact {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}

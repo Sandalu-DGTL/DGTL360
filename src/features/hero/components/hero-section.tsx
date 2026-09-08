@@ -11,10 +11,11 @@ import '../cursor-video-reveal.css';
 import styles from '../hero.module.css';
 import { advanceWheel, wheelPose, wheelProgress } from '../motion/service-wheel';
 
-const DESKTOP_QUERY = '(min-width: 1001px)';
+const DESKTOP_QUERY = '(min-width: 1001px) and (min-height: 651px)';
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 const SCROLL_SETTLE_THRESHOLD = 0.001;
-const SERVICE_SCROLL_STEP = 36;
+// One viewport of scrolling advances one card, keeping the orbit unhurried.
+const SERVICE_SCROLL_STEP = 100;
 
 function getWheelPosition(index: number, activeIndex: number, total: number) {
   const previous = (activeIndex - 1 + total) % total;
@@ -26,16 +27,53 @@ function getWheelPosition(index: number, activeIndex: number, total: number) {
   return 'hidden';
 }
 
-function TypedText({ text }: { text: string }) {
-  return <p className={styles.cardDetails}>{text}</p>;
-}
-
 export function HeroSection({ services }: { services: HomeService[] }) {
   const heroRef = useRef<HTMLElement>(null);
+  const cancelScroll = useRef<() => void>(() => {});
   const [activeIndex, setActiveIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const serviceCount = services.length;
+
+  useEffect(() => () => cancelScroll.current(), []);
+
+  const scrollToNextSection = () => {
+    const section = document.getElementById('who-we-are');
+    if (!section) return;
+    cancelScroll.current();
+    const start = window.scrollY;
+    const margin = parseFloat(getComputedStyle(section).scrollMarginTop) || 0;
+    const destination = Math.max(0, Math.min(
+      start + section.getBoundingClientRect().top - margin,
+      document.documentElement.scrollHeight - window.innerHeight,
+    ));
+    const duration = window.matchMedia(REDUCED_MOTION_QUERY).matches ? 0 : 600;
+    const started = performance.now();
+    let frame = 0;
+    const cancel = () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('wheel', cancel);
+      window.removeEventListener('touchstart', cancel);
+      window.removeEventListener('keydown', cancel);
+    };
+    cancelScroll.current = cancel;
+    window.addEventListener('wheel', cancel, { passive: true });
+    window.addEventListener('touchstart', cancel, { passive: true });
+    window.addEventListener('keydown', cancel);
+    const step = (time: number) => {
+      const progress = duration ? Math.min((time - started) / duration, 1) : 1;
+      const eased = progress * progress * (3 - 2 * progress);
+      window.scrollTo({ top: start + (destination - start) * eased, behavior: 'instant' });
+      if (progress < 1) frame = requestAnimationFrame(step);
+      else {
+        cancel();
+        history.pushState(null, '', '#who-we-are');
+        section.tabIndex = -1;
+        section.focus({ preventScroll: true });
+      }
+    };
+    frame = requestAnimationFrame(step);
+  };
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -177,9 +215,19 @@ export function HeroSection({ services }: { services: HomeService[] }) {
 
           <div className={styles.copyFooter}>
             <a href="#enquiry">TELL US THE PROBLEM ↗</a>
-            <span>SCROLL THE WORK ↓</span>
           </div>
         </div>
+
+        <a className={styles.scrollCue} href="#who-we-are" onClick={(event) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          scrollToNextSection();
+        }}>
+          <svg width="40" height="22" viewBox="0 0 40 22" fill="none" aria-hidden="true">
+            <path d="M3 3L20 18L37 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span>SCROLL DOWN</span>
+        </a>
 
         <div className={styles.field} aria-label="DGTL 360 services">
           <p className={styles.scrollHint}>
@@ -194,7 +242,10 @@ export function HeroSection({ services }: { services: HomeService[] }) {
               const shouldRenderImage = isDesktop !== null || position !== 'hidden';
 
               return (
-                <article
+                <Link
+                  href={`/services/${service.slug}`}
+                  aria-label={`Explore ${service.label}`}
+                  tabIndex={isInteractive ? 0 : -1}
                   className={styles.card}
                   data-position={position}
                   data-cursor-card
@@ -234,16 +285,10 @@ export function HeroSection({ services }: { services: HomeService[] }) {
                         <h2>{service.label}</h2>
                         <span>{service.cardHeadline}</span>
                       </div>
-                      <div className={styles.cardOverlay}>
-                        <h2>{service.label}</h2>
-                        <TypedText text={service.detailDescription} />
-                        <Link href={`/services/${service.slug}`} tabIndex={isInteractive ? 0 : -1}>
-                          EXPLORE SERVICE ↗
-                        </Link>
-                      </div>
+
                     </div>
                   </div>
-                </article>
+                </Link>
               );
             })}
           </div>

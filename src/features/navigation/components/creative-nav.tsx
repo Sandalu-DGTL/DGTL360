@@ -11,7 +11,7 @@ export function CreativeNav({ homepage = false }: { homepage?: boolean }) {
       <p className={styles.location}>COLOMBO + ANYWHERE</p>
       <nav className={styles.links} aria-label="Primary navigation">
         <Link href="/services/production">SERVICES</Link>
-        <a href="#enquiry">SAY HELLO</a>
+        <a className={styles.enquire} href={homepage ? '#enquiry' : '/#enquiry'}>ENQUIRE <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
   );
