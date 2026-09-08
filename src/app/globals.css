@@ -93,7 +93,7 @@ textarea {
 .home-section-slides > section:nth-child(4) { z-index: 4; }
 .home-section-slides > section:nth-child(5) { z-index: 5; }
 
-@media (max-width: 680px) {
+@media (max-width: 1000px), (max-height: 800px) {
   .home-section-slides > section {
     position: relative;
     top: auto;
@@ -112,4 +112,12 @@ textarea {
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
   }
+}
+
+/* Allow text to reflow with browser zoom and platform font differences. */
+img, video, canvas { max-width: 100%; }
+input, textarea, select { min-width: 0; max-width: 100%; }
+section[id] { scroll-margin-top: 80px; }
+@media (pointer: coarse) {
+  input, textarea, select { font-size: 16px; }
 }

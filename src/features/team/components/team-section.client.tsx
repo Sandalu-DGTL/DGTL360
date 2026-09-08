@@ -1,91 +1,54 @@
 'use client';
 
-import { useState } from 'react';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
+import { teamMembers, type TeamMember } from '../../../content/local/team';
 import styles from '../team.module.css';
 
-const members = [
-  ['01', 'Strategy & Planning', 'Creates the positioning, priorities and decision path that align the crew before execution begins.'],
-  ['02', 'Creative Direction', 'Turns the useful problem into a distinctive idea and keeps every expression connected to it.'],
-  ['03', 'Production', 'Brings sound, image, motion and the operational details together from first take to delivery.'],
-  ['04', 'Brand Systems', 'Builds identities that remain coherent across people, platforms, campaigns and everyday use.'],
-  ['05', 'Product Design', 'Makes complex digital journeys feel clear, useful and resilient for the people using them.'],
-  ['06', 'Engineering', 'Builds maintainable platforms and integrations that survive real traffic and real operations.'],
-  ['07', 'Growth', 'Connects creative work to measurable audience behaviour and keeps improving the learning loop.'],
-  ['08', 'Experience', 'Shapes the room, run sheet and production details around what people should feel and remember.'],
-  ['09', 'Operations', 'Keeps ownership, timing and delivery visible across a brief with several moving parts.'],
-  ['10', 'Agentic Systems', 'Introduces practical automation with visible controls, auditability and humans still accountable.'],
-];
-
-const positions = ['8% 30%', '28% 28%', '51% 27%', '75% 27%', '12% 65%', '35% 63%', '58% 62%', '82% 60%', '25% 90%', '55% 88%'];
+function Portrait({ member, large = false }: { member: TeamMember; large?: boolean }) {
+  return member.image ? (
+    <Image src={member.image} alt={`Temporary sample portrait for ${member.name}`} fill sizes={large ? '(max-width: 900px) 90vw, 45vw' : '(max-width: 680px) 28vw, 15vw'} style={{ objectFit: 'cover' }} />
+  ) : (
+    <div className={styles.placeholder} aria-label={`Portrait pending for ${member.name}`} role="img">
+      <strong aria-hidden="true">{member.name.split(' ').map(part => part[0]).join('')}</strong>
+    </div>
+  );
+}
 
 export function TeamSection() {
   const [selected, setSelected] = useState<number | null>(null);
-  const member = selected === null ? null : members[selected];
+  const profileRef = useRef<HTMLDivElement>(null);
+  const member = selected === null ? null : teamMembers[selected];
 
   return (
-    <section className={`${styles.section} ${member ? styles.hasSelection : ''}`} id="team" aria-labelledby="team-title">
-      <div className={styles.roster} aria-label="DGTL 360 team disciplines">
-        {members.map(([number, role], index) => (
-          <button
-            className={`${styles.portrait} ${selected === index ? styles.selected : ''}`}
-            key={number}
-            onClick={() => setSelected(index)}
-            aria-pressed={selected === index}
-            aria-label={`Open profile ${number}: ${role}`}
-          >
-            {/* Native image avoids a Vinext client-bundle React duplication issue. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/reference/team-collective.png"
-              alt=""
-              loading={index < 4 ? 'eager' : 'lazy'}
-              decoding="async"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: positions[index],
-              }}
-            />
-            <span>{number}</span>
+    <section className={`${styles.section} ${member ? styles.hasSelection : ''}`} id="team" aria-label="Meet the DGTL 360 team">
+      <div className={styles.roster} aria-label="Team members">
+        {teamMembers.map((person, index) => (
+          <button className={`${styles.portrait} ${selected === index ? styles.selected : ''}`} key={person.name}
+            onClick={() => { setSelected(index); profileRef.current?.focus({ preventScroll: true }); }}
+            aria-pressed={selected === index} aria-controls="team-profile" aria-label={`View ${person.name}'s profile`}>
+            <Portrait member={person} />
+            <span>{person.name}</span>
           </button>
         ))}
       </div>
-
-      <div className={styles.profile} aria-live="polite">
+      <div className={styles.profile} id="team-profile" ref={profileRef} tabIndex={-1} aria-live="polite">
         {member ? (
           <>
             <button className={styles.back} onClick={() => setSelected(null)}>← ALL PEOPLE</button>
-            <div className={styles.profileImage} key={`image-${member[0]}`}>
-              {/* Native image avoids a Vinext client-bundle React duplication issue. */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/assets/reference/team-profile.png"
-                alt="DGTL 360 team member editorial profile study"
-                decoding="async"
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: positions[selected ?? 0],
-                }}
-              />
-            </div>
-            <div className={styles.profileCopy} key={`copy-${member[0]}`}>
-              <p>PROFILE {member[0]}</p>
-              <h3>{member[1]}</h3>
-              <span>{member[2]}</span>
+            <div className={styles.profileImage} key={member.name}><Portrait member={member} large /></div>
+            <div className={styles.profileCopy}>
+              <p>{member.role}</p>
+              <h3>{member.name}</h3>
+              {member.bio && <span>{member.bio}</span>}
+              <a className={styles.linkedin} href={member.linkedin} target="_blank" rel="noopener noreferrer">VIEW LINKEDIN PROFILE ↗</a>
             </div>
           </>
         ) : (
           <div className={styles.intro}>
             <p>DGTL 360 / THE CREW</p>
-            <h2 id="team-title">The people<br />making it<br />happen</h2>
-            <span>Select any portrait to open their story.</span>
+            <h2>The people<br />making it<br />happen</h2>
+            <span>Select a team member to learn more.</span>
           </div>
         )}
       </div>

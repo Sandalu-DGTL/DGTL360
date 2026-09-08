@@ -1,10 +1,24 @@
 'use client';
 
+import { visibleAnimation } from '../../../../lib/animation/visible-animation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, type CSSProperties, type PointerEvent } from 'react';
+import { useEffect, useRef, useSyncExternalStore, type CSSProperties, type PointerEvent } from 'react';
 import type { Service } from '../../types/service.types';
 import styles from '../../service-detail.module.css';
+
+const MOBILE_REEL = '(max-width: 1000px), (pointer: coarse)';
+const REDUCED_REEL = '(prefers-reduced-motion: reduce)';
+function subscribeReel(onChange: () => void) {
+  const queries = [MOBILE_REEL, REDUCED_REEL].map((query) => window.matchMedia(query));
+  queries.forEach((query) => query.addEventListener('change', onChange));
+  return () => queries.forEach((query) => query.removeEventListener('change', onChange));
+}
+function getReelMode() {
+  if (window.matchMedia(REDUCED_REEL).matches) return 'static';
+  return window.matchMedia(MOBILE_REEL).matches ? 'mobile' : 'desktop';
+}
+const getServerReelMode = () => 'static';
 
 type CinemaService = Pick<
   Service,
@@ -54,16 +68,59 @@ export function ServiceCinemaReel({
   services: CinemaService[];
   currentSlug: string;
 }) {
+  const mode = useSyncExternalStore(subscribeReel, getReelMode, getServerReelMode);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const targetVelocityRef = useRef(-28);
 
   useEffect(() => {
     const track = trackRef.current;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const viewport = viewportRef.current;
+    if (!track || !viewport || mode === 'static') return;
 
-    if (!track || reducedMotion.matches) return;
+    if (mode === 'mobile') {
+      let previous = performance.now();
+      let direction = 1;
+      let pausedUntil = 0;
+      let touching = false;
+      let focused = false;
+      let offset = viewport.scrollLeft;
+      const pause = () => { touching = true; };
+      const resume = () => { touching = false; pausedUntil = performance.now() + 2200; };
+      const focus = () => { focused = true; };
+      const blur = () => { focused = false; pausedUntil = performance.now() + 2200; };
+      const wheel = () => { pausedUntil = performance.now() + 2200; };
+      const animate = (now: number) => {
+        const dt = Math.min((now - previous) / 1000, 0.05);
+        previous = now;
+        if (!document.hidden && !touching && !focused && now > pausedUntil) {
+          const end = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+          offset = Math.min(end, Math.max(0, offset + direction * 28 * dt));
+          viewport.scrollLeft = offset;
+          if (offset >= end) direction = -1;
+          if (offset <= 0) direction = 1;
+          viewport.dataset.reelDirection = direction > 0 ? 'left' : 'right';
+        } else offset = viewport.scrollLeft;
+      };
+      viewport.addEventListener('pointerdown', pause, { passive: true });
+      window.addEventListener('pointerup', resume, { passive: true });
+      window.addEventListener('pointercancel', resume, { passive: true });
+      viewport.addEventListener('focusin', focus);
+      viewport.addEventListener('focusout', blur);
+      viewport.addEventListener('wheel', wheel, { passive: true });
+      const stopAnimation = visibleAnimation(viewport, animate);
+      return () => {
+        stopAnimation();
+        viewport.removeEventListener('pointerdown', pause);
+        window.removeEventListener('pointerup', resume);
+        window.removeEventListener('pointercancel', resume);
+        viewport.removeEventListener('focusin', focus);
+        viewport.removeEventListener('focusout', blur);
+        viewport.removeEventListener('wheel', wheel);
+        viewport.scrollLeft = 0;
+      };
+    }
 
-    let animationFrame = 0;
     let position = 0;
     let velocity = targetVelocityRef.current;
     let previousTime = performance.now();
@@ -82,15 +139,18 @@ export function ServiceCinemaReel({
       }
 
       track.style.transform = `translate3d(${position}px, 0, 0)`;
-      animationFrame = requestAnimationFrame(moveFilm);
     };
 
-    animationFrame = requestAnimationFrame(moveFilm);
+    const stopAnimation = visibleAnimation(viewport, moveFilm);
 
-    return () => cancelAnimationFrame(animationFrame);
-  }, []);
+    return () => {
+      stopAnimation();
+      track.style.removeProperty('transform');
+    };
+  }, [mode]);
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (mode !== 'desktop') return;
     if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return;
 
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -113,11 +173,12 @@ export function ServiceCinemaReel({
       <header className={styles.reelHeader}>
         <p>DGTL 360 / SERVICE REEL</p>
         <h2 id="service-reel-title">Explore every service</h2>
-        <span>MOVE LEFT / RIGHT · SELECT A FRAME</span>
+        <span>{mode === 'desktop' ? 'MOVE LEFT / RIGHT · SELECT A FRAME' : 'SWIPE LEFT / RIGHT · SELECT A FRAME'}</span>
       </header>
 
       <div
         className={styles.reelViewport}
+        ref={viewportRef}
         data-reel-direction="left"
         onPointerLeave={handlePointerLeave}
         onPointerMove={handlePointerMove}

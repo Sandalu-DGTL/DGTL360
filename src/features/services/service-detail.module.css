@@ -709,3 +709,33 @@
   }
 
 }
+
+/* Native bidirectional touch scrolling; autoplay reverses at either end. */
+@media (max-width: 1000px), (pointer: coarse) {
+  .reelViewport {
+    overflow-x: auto;
+    touch-action: pan-x pan-y pinch-zoom;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .reelViewport::-webkit-scrollbar { display: none; }
+  .reelTrack { transform: none !important; }
+  .reelList[aria-hidden='true'] { display: none; }
+  .reelHeader span {
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    text-align: left;
+    line-height: 1.4;
+  }
+}
+
+.hero > *, .layout > *, .sectionHeader > * { min-width: 0; }
+@media (min-width: 1001px) and (max-width: 1200px) {
+  .hero { grid-template-columns: 1fr; }
+  .serviceVisual { width: 100%; height: min(45vw, 480px); }
+}
+@media (max-height: 650px) and (min-width: 1001px) {
+  .contact { position: relative; top: auto; height: auto; min-height: 0; overflow: visible; }
+}
+.detailFooter { flex-wrap: wrap; gap: 18px; line-height: 1.5; }

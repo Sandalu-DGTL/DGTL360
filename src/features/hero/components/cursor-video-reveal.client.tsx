@@ -269,22 +269,25 @@ function createVideoTexture(gl: WebGL2RenderingContext, src: string, onReady: (a
   const play = () => { void video.play().catch(onFailure); };
   const ready = () => {
     onReady(video.videoWidth / Math.max(video.videoHeight, 1));
-    if (!document.hidden) play();
+
   };
   video.addEventListener("loadeddata", ready, { once: true });
   video.addEventListener("error", onFailure);
 
 
+  let uploadedTime = -1;
   return {
     texture,
     pause: () => video.pause(),
     play,
     update() {
       if (video.readyState < video.HAVE_CURRENT_DATA) return false;
+      if (uploadedTime === video.currentTime) return true;
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       try {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+        uploadedTime = video.currentTime;
         return true;
       } catch { onFailure(); return false; }
     },
@@ -357,7 +360,13 @@ export function CursorVideoReveal({
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-    const uniform = (program: WebGLProgram, name: string) => gl.getUniformLocation(program, name);
+    const locations = new Map<WebGLProgram, Map<string, WebGLUniformLocation | null>>();
+    const uniform = (program: WebGLProgram, name: string) => {
+      let cache = locations.get(program);
+      if (!cache) { cache = new Map(); locations.set(program, cache); }
+      if (!cache.has(name)) cache.set(name, gl.getUniformLocation(program, name));
+      return cache.get(name)!;
+    };
 
     let failed = false;
     const fail = () => { failed = true; canvas.style.visibility = "hidden"; report("Static fallback"); };
@@ -420,7 +429,7 @@ export function CursorVideoReveal({
     const samples: Point[] = [];
     let lastInput: Point | null = null;
     let lastRendered: Point | null = null;
-    let lastMove = 0;
+    let lastMove = -Infinity;
     let impact = { x: 0.5, y: 0.5, at: -10000 };
     const pointer = (event: PointerEvent) => {
       if (event.target instanceof Element && event.target.closest("[data-cursor-ui]")) return;
@@ -438,6 +447,7 @@ export function CursorVideoReveal({
       }
       if (samples.length > 24) samples.splice(0, samples.length - 24);
       lastMove = performance.now();
+      wake();
     };
     const pointerDown = (event: PointerEvent) => {
       if (!settingsRef.current.impactEnabled || event.button !== 0 || !event.isPrimary) return;
@@ -447,6 +457,7 @@ export function CursorVideoReveal({
         y: 1 - event.clientY / Math.max(innerHeight, 1),
         at: performance.now(),
       };
+      wake();
     };
     const contextLost = (event: Event) => {
       event.preventDefault();
@@ -457,14 +468,22 @@ export function CursorVideoReveal({
     interactionRoot.addEventListener("pointerdown", pointerDown, { passive: true });
     canvas.addEventListener("webglcontextlost", contextLost);
 
+    const packed = new Float32Array(16);
     let raf = 0;
     let last = performance.now();
     let intersecting = true;
     let visible = !document.hidden;
+    const wake = () => {
+      if (raf || !visible || failed) return;
+      last = performance.now();
+      revealMedia.play();
+      raf = requestAnimationFrame(render);
+    };
     const visibility = () => {
       visible = !document.hidden && intersecting;
       cancelAnimationFrame(raf);
-      if (visible && !failed) {
+      raf = 0;
+      if (visible && !failed && performance.now() - Math.max(lastMove, impact.at) < 6000) {
         last = performance.now();
         revealMedia.play();
         raf = requestAnimationFrame(render);
@@ -477,6 +496,21 @@ export function CursorVideoReveal({
     document.addEventListener("visibilitychange", visibility);
 
     const render = (now: number) => {
+      raf = 0;
+      if (!visible || failed) return;
+      // Let the approved fluid trail dissipate, then stop both GPU work and decoding.
+      if (now - Math.max(lastMove, impact.at) > 6000) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        revealMedia.pause();
+        lastInput = lastRendered = null;
+        canvas.dataset.renderState = "idle";
+        return;
+      }
+      // Avoid doubling shader work on 120 Hz displays.
+      if (now - last < 1000 / 60 - 1) { raf = requestAnimationFrame(render); return; }
+      canvas.dataset.renderState = "active";
       const dt = Math.min((now - last) / 1000, 0.034);
       last = now;
       const c = settingsRef.current;
@@ -501,7 +535,7 @@ export function CursorVideoReveal({
         if (points.length === 1) points.push(points[0]);
         if (points.length) lastRendered = points[points.length - 1];
 
-        const packed = new Float32Array(16);
+
         const fallback = lastRendered ?? { x: 0.5, y: 0.5, t: now };
         for (let i = 0; i < 8; i += 1) {
           const point = points[i] ?? fallback;
@@ -590,7 +624,7 @@ export function CursorVideoReveal({
     };
 
     report("Loading video");
-    if (visible) raf = requestAnimationFrame(render);
+    canvas.dataset.renderState = "idle";
     const observer = new IntersectionObserver(([entry]) => {
       intersecting = entry.isIntersecting;
       visibility();
