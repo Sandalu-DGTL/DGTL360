@@ -739,3 +739,8 @@
   .contact { position: relative; top: auto; height: auto; min-height: 0; overflow: visible; }
 }
 .detailFooter { flex-wrap: wrap; gap: 18px; line-height: 1.5; }
+
+.reelViewport { cursor: grab; user-select: none; }
+.reelViewport[data-dragging='true'], .reelViewport[data-dragging='true'] a { cursor: grabbing; }
+.reelViewport img { -webkit-user-drag: none; }
+.reelViewport:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
