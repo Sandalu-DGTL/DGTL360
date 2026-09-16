@@ -8,7 +8,6 @@ export function CreativeNav({ homepage = false }: { homepage?: boolean }) {
         <span>DGTL 360</span>
         <i aria-hidden="true"><b /><b /><b /></i>
       </a>
-      <p className={styles.location}>COLOMBO + ANYWHERE</p>
       <nav className={styles.links} aria-label="Primary navigation">
         <Link href="/services/production">SERVICES</Link>
         <a className={styles.enquire} href={homepage ? '#enquiry' : '/#enquiry'}>ENQUIRE <span aria-hidden="true">↗</span></a>

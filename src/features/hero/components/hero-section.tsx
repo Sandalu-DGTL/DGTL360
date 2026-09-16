@@ -193,9 +193,9 @@ export function HeroSection({ services }: { services: HomeService[] }) {
           <p className={styles.eyebrow}>ONE CREW · EIGHT DOORS</p>
           <h1 id="hero-title" className={styles.title}>
             <span data-cursor-title-surface>
-              <span>MAKE THE THING.</span>
-              <span>MAKE IT LAND.</span>
-              <span>MAKE IT WORK.</span>
+              <span>Make the thing.</span>
+              <span>Make it land.</span>
+              <span>Make it work.</span>
             </span>
           </h1>
           <p className={styles.intro}>

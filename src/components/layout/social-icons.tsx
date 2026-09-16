@@ -8,10 +8,6 @@ const socials: { name: string; color: string; href?: string; asset: string }[] =
   { name: 'WhatsApp', color: '#20ce67', asset: 'whatsapp' },
   { name: 'YouTube', color: '#fff', asset: 'youtube' },
   { name: 'TikTok', color: '#fff', asset: 'tiktok' },
-  { name: 'Slack', color: '#fff', asset: 'slack' },
-  { name: 'Threads', color: '#090909', asset: 'threads' },
-  { name: 'Telegram', color: '#22a6dc', asset: 'telegram' },
-  { name: 'X', color: '#fff', asset: 'x' },
 ];
 
 export function SocialIcons() {

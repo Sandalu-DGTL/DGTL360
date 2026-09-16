@@ -20,14 +20,14 @@ export function SiteFooter({ backToTop = '#top' }: { backToTop?: string }) {
           </div>
           <div>
             <Link href="/#enquiry">Enquire</Link>
-            <a href="mailto:info@dgtl.lk">Email us ↗</a>
+            <Link href="/#enquiry">Email us ↗</Link>
           </div>
         </nav>
         <div className={styles.contact}>
           <SocialIcons />
           <Link href="/" className={styles.brand}>DGTL 360</Link>
           <p>Colombo + anywhere</p>
-          <a href="mailto:info@dgtl.lk">info@dgtl.lk ↗</a>
+          <Link href="/#enquiry">info@dgtl.lk ↗</Link>
         </div>
       </div>
       <div className={styles.legal}>

@@ -52,6 +52,7 @@
 }
 
 .profile {
+  scroll-margin-top: 80px;
   position: relative;
   min-height: 72vh;
   align-self: center;
@@ -104,6 +105,7 @@
 }
 
 .back {
+  min-height: 44px;
   position: absolute;
   z-index: 4;
   top: 1.25rem;
@@ -204,7 +206,7 @@
 
   .hasSelection .roster {
     display: grid;
-    grid-auto-columns: 92px;
+    grid-auto-columns: 120px;
     grid-auto-flow: column;
     grid-template-columns: none;
     padding-bottom: 0.55rem;
@@ -247,6 +249,10 @@
 .profile:focus-visible { outline: 2px solid #f1682f; outline-offset: 4px; }
 
 .section > * { min-width: 0; }
+.hasSelection .profile { display: flex; flex-direction: column; background: #111a23; }
+.hasSelection .profileImage { position: relative; inset: auto; min-height: 0; height: clamp(240px, 35vw, 440px); flex-shrink: 0; }
+.hasSelection .profileCopy { position: relative; inset: auto; padding: clamp(20px, 3vw, 40px); }
+.hasSelection .profileCopy span { max-width: 60ch; text-align: left; }
 @media (max-width: 900px), (max-height: 700px) {
   .profile { min-height: 0; }
   .hasSelection .profile { display: flex; flex-direction: column; background: #111a23; }
@@ -258,6 +264,75 @@
 }
 @media (max-width: 400px) {
   .portrait, .portrait:nth-child(5n + 1), .portrait:nth-child(5n + 4) { min-height: 140px; }
-  .portrait span { font-size: 9px; overflow-wrap: anywhere; }
+  .portrait span { overflow-wrap: anywhere; }
   .profileCopy { padding: 20px 16px; }
+}
+
+@media (max-width: 680px) {
+  .roster { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hasSelection .roster { grid-template-columns: none; }
+  .portrait span { font-size: 12px; }
+}
+
+/* Keep the selected portrait and a readable, scrollable biography in view. */
+.hasSelection .profile {
+  height: calc(100svh - 110px);
+  min-height: 0;
+  border-radius: 18px;
+  box-shadow: 0 18px 45px #111a231a;
+}
+.hasSelection .profileImage {
+  height: 32%;
+  min-height: 0;
+}
+.hasSelection .profileCopy {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(18px, 2vw, 28px);
+  scrollbar-width: thin;
+  scrollbar-color: #9daeb7 #111a23;
+}
+.profileCopy h3 { font-size: clamp(1.7rem, 2.8vw, 3rem); overflow-wrap: anywhere; }
+.profileCopy span { line-height: 1.65; }
+.profileCopy:focus-visible { outline: 2px solid #f1682f; outline-offset: -4px; }
+.portrait { border-radius: 10px; }
+.portrait img { transition: transform 450ms cubic-bezier(.2,.75,.2,1); }
+.portrait:hover img, .portrait.selected img { transform: scale(1.045); }
+@media (max-width: 900px) {
+  .hasSelection .profileImage { height: 28%; }
+  .hasSelection .profileCopy { padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profileCopy, .profileImage { animation: none; }
+  .portrait, .portrait img { transition: none; }
+}
+
+/* Each portrait is a cube tile: all members retain a visible front face. */
+.cubeScene { position: absolute; inset: 0; container-type: inline-size; perspective: 900px; }
+.cube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: translateZ(-50cqw);
+  transition: transform 550ms cubic-bezier(.22, 1, .36, 1);
+}
+.cubeFront, .cubeSide { position: absolute; inset: 0; backface-visibility: hidden; overflow: hidden; background: #17252c; }
+.cubeFront { transform: rotateY(0deg) translateZ(50cqw); }
+.cubeSide { transform: rotateY(90deg) translateZ(50cqw); filter: brightness(.65); }
+.entered .cube { animation: team-cube-turn 1100ms cubic-bezier(.22, 1, .36, 1) backwards; }
+@keyframes team-cube-turn {
+  from { transform: translateZ(-50cqw) rotateY(-90deg); }
+  to { transform: translateZ(-50cqw) rotateY(0deg); }
+}
+@media (hover: hover) {
+  .portrait:hover .cube { transform: translateZ(-50cqw) rotateY(-14deg); }
+  .portrait:nth-child(even):hover .cube { transform: translateZ(-50cqw) rotateY(-20deg); }
+}
+.portrait:focus-visible .cube { transform: translateZ(-50cqw) rotateY(-12deg); }
+.portrait:focus-visible { outline: 2px solid #f1682f; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .entered .cube { animation: none; }
+  .cube { transition: none; }
+  .portrait:hover .cube, .portrait:nth-child(even):hover .cube, .portrait:focus-visible .cube { transform: translateZ(-50cqw); }
 }
