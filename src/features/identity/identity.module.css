@@ -62,10 +62,10 @@
   top: 50%;
   transform: translate(-50%, -50%);
   margin: 0;
-  font: 850 29vw/.8 var(--font-interface), sans-serif;
-  letter-spacing: -.09em;
+  width: min(72vw, 130svh);
+  --brand-logo-width: 100%;
   pointer-events: none;
-  text-shadow: 0 6px 40px #07090e, 0 20px 90px #07090e;
+  filter: drop-shadow(0 6px 32px #07090e);
 }
 @media (max-width: 400px) {
   .letter { width: 52px; height: 52px; font-size: 44px; }
