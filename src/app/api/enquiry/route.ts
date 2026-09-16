@@ -1,3 +1,4 @@
+import { readLimitedJson } from '@/lib/http/read-json';
 import { sendEnquiryEmail } from '@/features/enquiry/server/send-enquiry-email';
 import { validateEnquiry } from '@/features/enquiry/validation/validate-enquiry';
 
@@ -24,15 +25,18 @@ export async function POST(request: Request) {
     return json({ success: false, message: 'Request is too large.' }, 413);
   }
 
-  if (!request.headers.get('content-type')?.includes('application/json')) {
+  if (request.headers.get('content-type')?.split(';', 1)[0].trim().toLowerCase() !== 'application/json') {
     return json({ success: false, message: 'JSON is required.' }, 415);
   }
 
   let requestBody: unknown;
 
   try {
-    requestBody = await request.json();
-  } catch {
+    requestBody = await readLimitedJson(request, maximumRequestSize);
+  } catch (error) {
+    if (error instanceof RangeError) {
+      return json({ success: false, message: 'Request is too large.' }, 413);
+    }
     return json({ success: false, message: 'Invalid JSON.' }, 400);
   }
 

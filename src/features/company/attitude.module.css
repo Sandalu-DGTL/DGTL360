@@ -1,0 +1,88 @@
+.section {
+  padding: clamp(24px, 4svh, 48px) 6vw;
+  background: #080c0e;
+  color: #f2f1ed;
+  scroll-margin-top: 90px;
+}
+.header { max-width: 850px; margin-bottom: clamp(20px, 3svh, 32px); }
+.kicker, .number { font: 650 11px/1.5 var(--font-mono), monospace; letter-spacing: .07em; }
+.header .kicker { color: #b5c0c3; font-size: 11px; margin: 0 0 8px; }
+.header h2 { margin: 0 0 12px; font: 400 clamp(2.4rem, 4vw, 3.7rem)/1.05 var(--font-display); }
+.section p { font-size: 16px; line-height: 1.55; color: #bfc6c9; }
+.header > p:last-child { margin: 0; max-width: 76ch; }
+.values { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(14px, 2vh, 24px); }
+.value {
+  position: relative;
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #ffffff26;
+  border-radius: 16px;
+  padding: clamp(18px, 1.8vw, 28px);
+  min-width: 0;
+  background: linear-gradient(145deg, #131e24, #0c1216);
+  box-shadow: 0 4px 12px #00000020;
+  transform: translate(var(--spread-x, 0px), var(--spread-y, 0px)) scale(var(--spread-scale, 1)) rotate(var(--spread-rotation, 0deg));
+  transition: scale 240ms ease, translate 240ms ease, box-shadow 240ms ease, border-color 240ms ease, background 240ms ease;
+}
+.value:nth-child(n + 4) { grid-column: span 3; }
+.value:focus-visible { outline: 2px solid #f1682f; outline-offset: 4px; }
+@media (hover: hover) {
+  .value:hover { translate: 0 -7px; scale: 1.015; z-index: 1; border-color: #f1682f99; background: linear-gradient(145deg, #253039, #131b20); box-shadow: 0 18px 32px #00000055, 0 0 24px #f1682f12; }
+}
+.value:focus-visible { translate: 0 -4px; border-color: #f1682f99; }
+.value:active { translate: 0 -2px; }
+
+.number { display: block; color: #f1682f; margin-bottom: 8px; }
+.value h3, .work h3 { margin: 0 0 10px; font: 400 clamp(1.4rem, 2vw, 1.9rem)/1.15 var(--font-display); }
+.value p, .work p { margin: 0; max-width: 48ch; }
+.work { display: grid; grid-template-columns: minmax(160px, 1fr) 3fr; align-items: center; gap: 20px; border-top: 1px solid #ffffff26; padding: 22px 0 0; margin-top: 24px; }
+.work h3 { margin: 0; }
+.work p { max-width: 85ch; }
+@media (min-width: 1100px) and (min-height: 720px) {
+  :global(.home-section-slides) > .section {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: clamp(18px, 2.4svh, 28px);
+    padding-top: 104px;
+    padding-bottom: clamp(72px, 10svh, 120px);
+  }
+  .header { max-width: none; margin-bottom: 0; display: grid; grid-template-columns: 1fr 1.2fr; column-gap: 48px; align-items: center; }
+  .header .kicker { grid-column: 1 / -1; }
+  .header h2 { margin: 0; font-size: clamp(44px, 4.5vw, 76px); }
+  .header > p:last-child { max-width: 66ch; }
+  .values { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .work { margin-top: 0; }
+  .section p { font-size: clamp(16px, 1.1vw, 20px); }
+  .value h3, .work h3 { font-size: clamp(25px, 2.1vw, 36px); }
+}
+@media (max-width: 1099px), (max-height: 719px) {
+  :global(.home-section-slides) > .section { position: relative; top: auto; min-height: 0; }
+  .values { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .value, .value:nth-child(n + 4) { grid-column: auto; }
+  .value:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  .values { grid-template-columns: 1fr; gap: 14px; }
+  .section { padding-block: 32px; }
+  .value { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; }
+  .number { padding-top: 4px; }
+  .work { grid-template-columns: 1fr; gap: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) { .value { transition: none; } .value:hover, .value:focus-visible, .value:active { transform: none; translate: none; scale: none; } }
+
+
+
+/* Match the horizontal spacing of Who we are at every breakpoint. */
+@media (max-width: 1000px) {
+  .section { padding-inline: 7vw; }
+}
+@media (max-width: 400px) {
+  .section { padding-inline: 22px; }
+}

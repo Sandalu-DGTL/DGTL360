@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { EnquiryForm } from './enquiry-form.client';
 import styles from '../enquiry.module.css';
@@ -15,7 +16,7 @@ export function EnquirySection({ compact = false }: { compact?: boolean }) {
           <p className={styles.kicker}>CONTACT DETAILS</p>
           <h2 id="service-enquiry-title">Let’s make your next move clear.</h2>
           <p className={styles.copy}>Tell us what you are building, what feels stuck, or where you need traction. We’ll route the right DGTL 360 crew and the next useful step.</p>
-          <a className={styles.email} href="mailto:info@dgtl.lk">info@dgtl.lk ↗</a>
+          <Link className={styles.email} href="/#enquiry">info@dgtl.lk ↗</Link>
           <address className={styles.address}>
             <span>VISIT US</span>
             Mode Residence,<br />
@@ -53,7 +54,7 @@ export function EnquirySection({ compact = false }: { compact?: boolean }) {
           : 'Tell us what you are trying to make, fix or move forward. We’ll bring in the right people, ask the useful questions and come back with a practical next step.'}
       </p>
       <EnquiryForm compact={compact} />
-      <a className={styles.email} href="mailto:info@dgtl.lk">info@dgtl.lk ↗</a>
+      <Link className={styles.email} href="/#enquiry">info@dgtl.lk ↗</Link>
       {compact ? (
         <address className={styles.address}>
           <span>OUR ADDRESS</span>

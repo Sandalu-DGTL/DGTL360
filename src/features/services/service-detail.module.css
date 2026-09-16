@@ -186,16 +186,11 @@
   transition: color 160ms ease, transform 160ms ease;
 }
 
-.sections details:hover summary > span:first-child,
-.sections details:focus-within summary > span:first-child,
 .sections details[open] summary > span:first-child,
-.sections details:hover .sectionTitle,
-.sections details:focus-within .sectionTitle,
 .sections details[open] .sectionTitle {
   color: var(--service-accent);
 }
 
-.sections details:hover .sectionTitle,
 .sections details:focus-within .sectionTitle {
   transform: translateX(4px);
 }
@@ -212,8 +207,6 @@
   transition: transform 180ms ease, background 180ms ease, color 180ms ease;
 }
 
-.sections details:hover i,
-.sections details:focus-within i,
 .sections details[open] i {
   color: #050505;
   background: var(--service-accent);
@@ -229,8 +222,6 @@
   line-height: 1.68;
 }
 
-.sections details:hover > .sectionBody,
-.sections details:focus-within > .sectionBody,
 .sections details[open] > .sectionBody {
   display: block;
   animation: sectionDescriptionIn 220ms ease both;
@@ -519,23 +510,7 @@
   overflow-y: auto;
 }
 
-.detailFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px 28px;
-  border-top: 1px solid rgba(255,255,255,.18);
-  background: #000;
-  color: #fff;
-  font: 750 9px/1 var(--font-mono), monospace;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
 
-.detailFooter a:hover,
-.detailFooter a:focus-visible {
-  color: var(--service-accent);
-}
 
 @media (max-width: 1000px) {
   .layout {
@@ -668,12 +643,6 @@
     font-size: clamp(13px, 4.2vw, 18px);
   }
 
-  .detailFooter {
-    align-items: flex-start;
-    padding-inline: 18px;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -730,7 +699,7 @@
   }
 }
 
-.hero > *, .layout > *, .sectionHeader > * { min-width: 0; }
+.hero > *, .layout > * { min-width: 0; }
 @media (min-width: 1001px) and (max-width: 1200px) {
   .hero { grid-template-columns: 1fr; }
   .serviceVisual { width: 100%; height: min(45vw, 480px); }
@@ -738,7 +707,7 @@
 @media (max-height: 650px) and (min-width: 1001px) {
   .contact { position: relative; top: auto; height: auto; min-height: 0; overflow: visible; }
 }
-.detailFooter { flex-wrap: wrap; gap: 18px; line-height: 1.5; }
+
 
 .reelViewport { cursor: grab; user-select: none; }
 .reelViewport[data-dragging='true'], .reelViewport[data-dragging='true'] a { cursor: grabbing; }

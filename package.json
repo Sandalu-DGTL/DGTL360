@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "test": "node --experimental-strip-types --test src/features/hero/motion/service-wheel.test.mjs src/features/enquiry/validation/validate-enquiry.test.mjs src/features/identity/letters.test.mjs",
+    "test": "node --experimental-strip-types --test src/features/hero/motion/service-wheel.test.mjs src/features/enquiry/validation/validate-enquiry.test.mjs src/features/identity/letters.test.mjs src/lib/http/read-json.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

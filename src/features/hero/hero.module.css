@@ -545,3 +545,29 @@
   .serviceWheel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
   .card, .card[data-position] { min-height: 360px; }
 }
+
+/* Size the headline against its column so each phrase stays together. */
+.copy { container-type: inline-size; }
+.title {
+  font-size: clamp(28px, 9.5cqw, 66px);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+.title [data-cursor-title-surface] > span { white-space: nowrap; }
+.title [data-cursor-title-surface] > span + span { margin-top: .08em; }
+.eyebrow { margin-bottom: clamp(18px, 3vh, 32px); }
+.intro { margin-top: clamp(20px, 3vh, 32px); max-width: 44ch; line-height: 1.65; }
+.activeService { margin-top: clamp(24px, 4vh, 40px); }
+.activeService .serviceLabel { line-height: 1.6; }
+.activeService a { display: inline-flex; align-items: center; min-height: 44px; }
+@media (min-width: 1001px) and (min-height: 651px) {
+  .copy { top: clamp(112px, 16vh, 170px); bottom: 36px; width: min(36vw, 620px); }
+}
+@media (max-width: 1000px), (max-height: 650px) {
+  .title { font-size: clamp(28px, 9.5cqw, 66px); line-height: 1.02; }
+  .intro { font-size: 16px; }
+}
+@media (min-width: 1001px) and (min-height: 651px) {
+  .copy { justify-content: center; padding-bottom: 4vh; }
+  .copyFooter { margin-top: clamp(24px, 4vh, 44px); justify-content: flex-start; }
+}
