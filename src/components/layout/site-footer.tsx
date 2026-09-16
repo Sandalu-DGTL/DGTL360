@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BrandLogo } from './brand-logo';
 import styles from './site-footer.module.css';
 import { SocialIcons } from './social-icons';
 
@@ -25,7 +26,7 @@ export function SiteFooter({ backToTop = '#top' }: { backToTop?: string }) {
         </nav>
         <div className={styles.contact}>
           <SocialIcons />
-          <Link href="/" className={styles.brand}>DGTL 360</Link>
+          <Link href="/" className={styles.brand} aria-label="DGTL home"><BrandLogo /></Link>
           <p>Colombo + anywhere</p>
           <Link href="/#enquiry">info@dgtl.lk ↗</Link>
         </div>

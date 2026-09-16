@@ -1,6 +1,7 @@
 'use client';
 
 import type { CSSProperties } from 'react';
+import { BrandLogo } from '@/components/layout/brand-logo';
 import { glyphs, colors } from '../letters';
 import { useLetterCollisions } from '../use-letter-collisions';
 import styles from '../identity.module.css';
@@ -37,7 +38,7 @@ export function DgtlFieldSection() {
           ))}
         </div>
         <div className={styles.grid} aria-hidden="true" />
-        <h2 className={styles.logo}>DGTL</h2>
+        <h2 className={styles.logo}><BrandLogo sizes="137vw" /></h2>
       </div>
     </section>
   );

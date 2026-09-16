@@ -48,27 +48,6 @@
   justify-self: start;
 }
 
-.brand i {
-  display: inline-flex;
-  height: 12px;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.brand b {
-  display: block;
-  width: 2px;
-  height: 5px;
-  background: currentColor;
-  transition: height 260ms cubic-bezier(.2, .8, .2, 1);
-}
-
-.brand b:nth-child(2) { height: 9px; }
-.brand b:nth-child(3) { height: 7px; }
-.brand:hover b:nth-child(1), .brand:focus-visible b:nth-child(1) { height: 11px; }
-.brand:hover b:nth-child(2), .brand:focus-visible b:nth-child(2) { height: 6px; }
-.brand:hover b:nth-child(3), .brand:focus-visible b:nth-child(3) { height: 12px; }
-
 .links {
   display: flex;
   align-items: center;
