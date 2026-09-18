@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import styles from './site-footer.module.css';
 
-// Add only verified DGTL profile URLs here. Unconfigured icons are not links.
+// Keep this order aligned with the social links shown in the footer.
 const socials: { name: string; color: string; href?: string; asset: string }[] = [
-  { name: 'Instagram', color: '#ed008c', asset: 'instagram' },
-  { name: 'LinkedIn', color: '#0088bc', asset: 'linkedin' },
-  { name: 'WhatsApp', color: '#20ce67', asset: 'whatsapp' },
+  { name: 'Facebook', color: '#1877f2', href: 'https://www.facebook.com/profile.php?id=61594186664260', asset: 'facebook' },
+  { name: 'Instagram', color: '#ed008c', href: 'https://www.instagram.com/dgtl.lk/', asset: 'instagram' },
+  { name: 'TikTok', color: '#fff', href: 'https://www.tiktok.com/@dgtl.lk', asset: 'tiktok' },
   { name: 'YouTube', color: '#fff', asset: 'youtube' },
-  { name: 'TikTok', color: '#fff', asset: 'tiktok' },
+  { name: 'LinkedIn', color: '#0088bc', href: 'https://www.linkedin.com/company/dgtl.lk/', asset: 'linkedin' },
+  { name: 'WhatsApp', color: '#20ce67', href: 'https://wa.me/94764524670', asset: 'whatsapp' },
 ];
 
 export function SocialIcons() {

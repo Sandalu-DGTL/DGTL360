@@ -120,3 +120,9 @@
     display: none;
   }
 }
+
+/* Keep the navigation logo compact on phones. */
+@media (max-width: 700px) {
+  .header { --brand-logo-width: clamp(58px, 15vw, 72px); }
+  .header > a:first-child { display: inline-flex; align-items: center; min-height: 44px; }
+}

@@ -713,3 +713,9 @@
 .reelViewport[data-dragging='true'], .reelViewport[data-dragging='true'] a { cursor: grabbing; }
 .reelViewport img { -webkit-user-drag: none; }
 .reelViewport:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
+
+/* Keep the navigation logo compact on phones. */
+@media (max-width: 700px) {
+  .header { --brand-logo-width: clamp(58px, 15vw, 72px); }
+  .header > a:first-child { display: inline-flex; align-items: center; min-height: 44px; }
+}
