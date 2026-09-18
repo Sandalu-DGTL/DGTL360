@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BrandLogo } from '@/components/layout/brand-logo';
 import type { CSSProperties } from 'react';
 import { EnquirySection } from '../../../enquiry/components/enquiry-section';
 import { services } from '../../../../content/local/services';
@@ -15,7 +16,7 @@ export function ServiceDetailPage({ service }: { service: Service }) {
     <div className={styles.page} style={{ '--service-accent': service.accent } as CSSProperties}>
       <ServiceRevealController />
       <header className={styles.header}>
-        <Link href="/">DGTL 360</Link>
+        <Link href="/" aria-label="DGTL home"><BrandLogo /></Link>
         <nav aria-label="Service breadcrumb">
           <Link href="/#top">← SERVICES</Link>
           <span>{String(service.order).padStart(2, '0')} / {service.label.toUpperCase()}</span>
