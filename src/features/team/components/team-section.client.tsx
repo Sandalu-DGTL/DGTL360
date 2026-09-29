@@ -16,8 +16,9 @@ function Portrait({ member, large = false }: { member: TeamMember; large?: boole
 }
 
 export function TeamSection() {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(0);
   const [entered, setEntered] = useState(false);
+  const hasInteracted = useRef(false);
   const sectionRef = useRef<HTMLElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const selectedButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -32,6 +33,7 @@ export function TeamSection() {
   }, []);
 
   useEffect(() => {
+    if (!hasInteracted.current) return;
     if (selected === null) {
       selectedButtonRef.current?.focus();
       return;
@@ -47,29 +49,25 @@ export function TeamSection() {
           <button className={`${styles.portrait} ${selected === index ? styles.selected : ''}`} key={person.name}
             style={{ animationDelay: `${index * 65}ms` }}
             onClick={(event) => {
+              hasInteracted.current = true;
               selectedButtonRef.current = event.currentTarget;
               setSelected(index);
             }}
             aria-pressed={selected === index} aria-controls="team-profile" aria-label={`View ${person.name}'s profile`}>
-            <div className={styles.cubeScene}>
-              <div className={styles.cube} style={{ animationDelay: `${Math.floor(index / 3) * 160 + (index % 3) * 65}ms` }}>
-                <div className={styles.cubeFront}><Portrait member={person} /></div>
-                <div className={styles.cubeSide} aria-hidden="true"><Portrait member={person} /></div>
-              </div>
-            </div>
-            <span>{person.name}</span>
+            <Portrait member={person} />
+            <span>{String(index + 1).padStart(2, '0')}</span>
           </button>
         ))}
       </div>
       <div className={styles.profile} id="team-profile" ref={profileRef} tabIndex={-1} aria-live="polite">
         {member ? (
           <>
-            <button className={styles.back} onClick={() => setSelected(null)}>← ALL PEOPLE</button>
+            <button className={styles.back} onClick={() => { hasInteracted.current = true; setSelected(null); }}>← ALL PEOPLE</button>
             <div className={styles.profileImage} key={member.name}><Portrait member={member} large /></div>
             <div className={styles.profileCopy} key={`${member.name}-copy`} tabIndex={0} role="region" aria-label={`${member.name}'s biography`}>
-              <p>{member.role}</p>
+              <p className={styles.role}>{member.role}</p>
               <h3>{member.name}</h3>
-              {member.bio && <span>{member.bio}</span>}
+              {member.bio && <p className={styles.bio}>{member.bio}</p>}
               {member.linkedin && <a className={styles.linkedin} href={member.linkedin} target="_blank" rel="noopener noreferrer">VIEW LINKEDIN PROFILE ↗</a>}
             </div>
           </>

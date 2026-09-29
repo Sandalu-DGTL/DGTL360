@@ -5,8 +5,8 @@
   scroll-margin-top: 90px;
 }
 .header { max-width: 850px; margin-bottom: clamp(20px, 3svh, 32px); }
-.kicker, .number { font: 650 11px/1.5 var(--font-mono), monospace; letter-spacing: .07em; }
-.header .kicker { color: #b5c0c3; font-size: 11px; margin: 0 0 8px; }
+.kicker, .number { font: 750 clamp(12px, .9vw, 15px)/1.4 var(--font-interface), system-ui, sans-serif; letter-spacing: .12em; }
+.header .kicker { color: #b5c0c3; margin: 0 0 8px; }
 .header h2 { margin: 0 0 12px; font: 400 clamp(2.4rem, 4vw, 3.7rem)/1.05 var(--font-display); }
 .section p { font-size: 16px; line-height: 1.55; color: #bfc6c9; }
 .header > p:last-child { margin: 0; max-width: 76ch; }

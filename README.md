@@ -2,6 +2,8 @@
 
 Production-ready marketing site for DGTL 360, built from the supplied homepage and service-detail references.
 
+For a full introduction, technology stack, feature list, file map, setup instructions, and deployment notes, read [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md).
+
 The project uses the Next.js App Router and is ready for Git-based deployment on Vercel.
 
 ## Run locally
