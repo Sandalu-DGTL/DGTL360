@@ -310,7 +310,7 @@ type Props = {
 };
 
 export function CursorVideoReveal({
-  videoSrc = "/assets/video/mycelial-transport-1.mp4",
+  videoSrc = "/assets/video/mycelial-transport.mp4",
   settings = acceptedCursorVideoReveal,
   onStatus,
   rootSelector = "[data-cursor-physics-root]",

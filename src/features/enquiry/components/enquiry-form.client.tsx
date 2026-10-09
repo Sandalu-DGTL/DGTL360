@@ -67,23 +67,23 @@ export function EnquiryForm({ compact }: { compact: boolean }) {
       >
         <label>
           <span>YOUR NAME *</span>
-          <input name="name" autoComplete="name" minLength={2} maxLength={100} required />
+          <input name="name" autoComplete="name" placeholder=" " minLength={2} maxLength={100} required />
         </label>
         <label>
           <span>YOUR EMAIL ADDRESS *</span>
-          <input name="email" type="email" autoComplete="email" maxLength={254} required />
+          <input name="email" type="email" autoComplete="email" placeholder=" " maxLength={254} required />
         </label>
         <label>
           <span>COMPANY</span>
-          <input name="company" autoComplete="organization" maxLength={120} />
+          <input name="company" autoComplete="organization" placeholder=" " maxLength={120} />
         </label>
         <label>
           <span>PHONE</span>
-          <input name="phone" type="tel" autoComplete="tel" maxLength={40} />
+          <input name="phone" type="tel" autoComplete="tel" placeholder=" " maxLength={40} />
         </label>
         <label className={styles.message}>
           <span>YOUR MESSAGE *</span>
-          <textarea name="message" rows={compact ? 4 : 3} minLength={10} maxLength={5000} required />
+          <textarea name="message" rows={compact ? 4 : 3} placeholder=" " minLength={10} maxLength={5000} required />
         </label>
         <div className={styles.honeypot} aria-hidden="true">
           <label>

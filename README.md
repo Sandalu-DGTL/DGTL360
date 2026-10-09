@@ -10,10 +10,10 @@ The project uses the Next.js App Router and is ready for Git-based deployment on
 
 ```bash
 npm install
-npm run dev
+npm run dev -- --port 3001
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:3001`.
 
 ## Deploy on Vercel
 
@@ -37,7 +37,11 @@ npm run build
 - `src/features/` — self-contained business sections such as hero, services, team, and enquiry.
 - `src/components/` — shared layout primitives used across features and routes.
 - `src/content/local/` — typed editorial content and service definitions.
-- `public/assets/reference/` — supplied visual references used to reproduce the approved direction.
+- `public/assets/team/` — team portraits, selected orange portraits, and temporary placeholders.
+- `public/assets/services/` — artwork shared by service cards and detail pages.
+- `public/assets/brand/`, `social/`, and `video/` — runtime branding, footer icons, and video.
+- `docs/design-references/` — design screenshots kept outside publicly served assets.
+- [Asset guide](docs/assets.md) — asset locations and attribution.
 - `docs/` — architecture and maintenance notes.
 
 The eight service pages are generated from one typed content source at `src/content/local/services.ts`. Adding or editing a service there updates both the homepage service field and its detail route.
