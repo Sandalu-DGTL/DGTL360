@@ -17,7 +17,7 @@ This repository contains the website itself. The services, team biographies, and
 | Styling | CSS Modules, global CSS, Tailwind CSS `4.2.1` through PostCSS | Provides responsive layouts, component styles, animations, and the global stylesheet. Most feature styling is in CSS Modules. |
 | Fonts | `next/font/google` with Geist and Geist Mono | Loads and optimizes the interface and monospace fonts. |
 | Visual effects | Browser CSS animations, Intersection Observer, Resize Observer, Canvas, and WebGL 2 | Powers scroll reveals, interactive cards, the letter field, and the optional hero video effect. These are browser APIs, not additional installed animation libraries. |
-| Images and video | `next/image` plus files under `public/assets/` | Displays the DGTL logo, service artwork, team placeholders, social icons, and video assets. |
+| Images and video | `next/image` plus files under `public/assets/` | Displays the DGTL logo, service artwork, team portraits, social icons, and video assets. |
 | Email delivery | Resend SDK `^6.25.0` | Sends website enquiries from a server-only endpoint. |
 | Code quality | ESLint `9.39.4`, `eslint-config-next` `16.3.4`, TypeScript checks | Checks code style and type correctness. |
 | Automated tests | Node.js built-in test runner | Tests selected motion logic, input validation, letter data, and bounded JSON reading. |
@@ -66,7 +66,7 @@ dgtl-360/
 │   │   ├── services/                       Service page components
 │   │   └── team/                           Team cards and profiles
 │   └── lib/                                Shared animation and HTTP helpers
-├── public/assets/                          Brand, service, team, video, and social assets
+├── public/assets/                          Brand, services, team, video, and social assets
 ├── docs/                                   Architecture, email, quality, and security notes
 ├── next.config.ts                          Next.js configuration and response headers
 ├── postcss.config.mjs                      Tailwind/PostCSS configuration
@@ -112,3 +112,5 @@ npm run build
 The repository is connected to a Vercel project. A deployment needs the Next.js framework preset and, for working enquiry email, the server-only environment variables listed above. Vercel builds from the Git branch configured in that project; confirm that branch in Vercel before expecting a push to update production. Changing Vercel environment variables requires a new deployment for the running build to use them.
 
 To update a service, edit `src/content/local/services.ts`; the homepage service entry and the corresponding `/services/[slug]` page both use that data. Team text is in `src/content/local/team.ts`, and privacy text is in `src/content/local/privacy.ts`. The team image files currently include placeholder portraits, so replace them with approved photographs before treating them as real member images.
+
+See [docs/assets.md](docs/assets.md) for the image folder structure and asset maintenance guidance.

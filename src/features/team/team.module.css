@@ -34,29 +34,18 @@
 }
 
 .portrait img {
+  object-position: center 30%;
   filter: grayscale(1);
   transition: filter 260ms ease, transform 500ms cubic-bezier(.2,.75,.2,1);
 }
 
 .portrait:hover img,
-.portrait:focus-visible img { filter: grayscale(.35); transform: scale(1.045); }
+.portrait:focus-visible img { transform: scale(1.045); }
+.portrait.selected img { filter: none; }
 .portrait:hover,
 .portrait:focus-visible,
 .portrait.selected { border-color: #eb6a31; }
 .portrait:focus-visible { outline: 2px solid #161616; outline-offset: 3px; }
-
-.portrait span {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  display: grid;
-  width: 25px;
-  height: 25px;
-  place-items: center;
-  background: #fff;
-  color: #111;
-  font: 750 10px/1 var(--font-interface), system-ui, sans-serif;
-}
 
 .profile {
   position: relative;
@@ -73,35 +62,45 @@
 }
 
 .profileImage {
-  position: relative;
-  flex: 0 0 56%;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  background: #eeeae6;
+  background: #ea6e35;
   animation: image-in 600ms cubic-bezier(.2,.75,.2,1) both;
 }
 
-.profileImage img { opacity: 1; mix-blend-mode: normal; }
+.profileImage img { object-position: center top; }
+
+.hasSelection .profile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 28%, rgba(8, 12, 15, .2) 42%, rgba(8, 12, 15, .9) 66%, #080c0ff5 100%);
+}
 
 .profileCopy {
   display: flex;
-  flex: 1;
+  position: relative;
+  z-index: 1;
   flex-direction: column;
   align-items: center;
   min-height: 0;
+  max-height: 48%;
+  margin-top: auto;
   overflow-y: auto;
-  padding: clamp(18px, 2.5vw, 38px) clamp(24px, 4vw, 64px);
-  background: #172127;
+  overscroll-behavior-y: contain;
+  padding: 18px clamp(24px, 3vw, 48px) clamp(24px, 3vh, 36px);
+  background: transparent;
   color: #fff;
   text-align: center;
-  scrollbar-color: #81919a #172127;
+  scrollbar-color: #ffffff80 transparent;
   scrollbar-width: thin;
 }
 
 .profileCopy > * { animation: copy-in 460ms cubic-bezier(.2,.75,.2,1) both; }
 .profileCopy > *:nth-child(2) { animation-delay: 70ms; }
 .profileCopy > *:nth-child(3) { animation-delay: 140ms; }
-.profileCopy > *:nth-child(4) { animation-delay: 210ms; }
 
 .profileCopy .role {
   margin: 0;
@@ -113,7 +112,7 @@
 
 .profileCopy h3 {
   margin: 10px 0 14px;
-  font: 800 clamp(27px, 3vw, 55px)/1 var(--font-interface), system-ui, sans-serif;
+  font: 800 clamp(27px, 2.5vw, 44px)/1.1 var(--font-interface), system-ui, sans-serif;
   letter-spacing: -.055em;
   text-transform: uppercase;
   overflow-wrap: anywhere;
@@ -123,21 +122,8 @@
   max-width: 62ch;
   margin: 0;
   color: #e3e8ea;
-  font: 450 clamp(14px, 1.05vw, 17px)/1.55 var(--font-interface), system-ui, sans-serif;
+  font: 450 clamp(14px, 1.05vw, 16px)/1.55 var(--font-interface), system-ui, sans-serif;
 }
-
-.linkedin {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  margin-top: 18px;
-  border-bottom: 1px solid #d5dce0;
-  color: #fff;
-  font: 750 11px/1.2 var(--font-interface), system-ui, sans-serif;
-  letter-spacing: .09em;
-}
-
-.linkedin:hover { color: #f0a57e; border-color: #f0a57e; }
 
 .back {
   position: absolute;
@@ -196,14 +182,13 @@
     padding: 90px var(--page-gutter) 32px;
   }
   .roster { grid-template-rows: repeat(3, minmax(140px, 23vw)); }
-  .profile { min-height: 680px; }
+  .profile { height: 850px; min-height: 680px; }
 }
 
 @media (max-width: 600px) {
   .section { gap: 18px; }
   .roster { grid-template-rows: repeat(3, minmax(105px, 33vw)); gap: 7px; }
-  .profile { min-height: min(780px, 110svh); }
-  .profileImage { flex-basis: 44%; }
+  .profile { height: 780px; min-height: 680px; }
   .profileCopy { padding: 20px; }
   .profileCopy h3 { font-size: clamp(25px, 7vw, 38px); }
 }

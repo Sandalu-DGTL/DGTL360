@@ -6,7 +6,12 @@ The site uses a feature-first structure so visual sections, styles, content, and
 dgtl-360/
 ├── docs/                         # Architecture and maintenance notes
 ├── public/
-│   ├── assets/reference/         # Approved source imagery and visual references
+│   ├── assets/
+│   │   ├── team/                # portraits/, selected/, placeholders/
+│   │   ├── services/            # Shared service artwork
+│   │   ├── brand/               # DGTL logo
+│   │   ├── social/              # Active footer icons
+│   │   └── video/               # Hero video
 │   ├── favicon.svg
 │   └── og.png                    # Social sharing image
 ├── src/
@@ -21,7 +26,7 @@ dgtl-360/
 │   ├── components/
 │   │   └── layout/               # Shared site-wide layout components
 │   ├── content/
-│   │   └── local/services.ts     # Typed service content source
+│   │   └── local/                # Typed service, team, and privacy content
 │   └── features/
 │       ├── company/              # Who-we-are and attitude sections
 │       ├── enquiry/              # Form UI, validation, email rendering and Resend service
@@ -47,6 +52,8 @@ dgtl-360/
 6. Use direct imports across server/client boundaries. Avoid barrels that mix client and server components.
 7. Store secrets in deployment environment variables; never commit `.env` files.
 8. Keep Vercel’s framework preset on Next.js and deploy production from `main`.
+
+Design-only screenshots live in `docs/design-references/`, outside the public web root. See [assets.md](assets.md) for asset conventions and attribution.
 
 ## Scaling path
 
