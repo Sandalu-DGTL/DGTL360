@@ -22,7 +22,7 @@ function Portrait({ member, large = false, active = false }: { member: TeamMembe
 }
 
 export function TeamSection() {
-  const [selected, setSelected] = useState<number | null>(0);
+  const [selected, setSelected] = useState<number | null>(null);
   const hasInteracted = useRef(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const selectedButtonRef = useRef<HTMLButtonElement | null>(null);
