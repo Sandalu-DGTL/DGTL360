@@ -285,7 +285,6 @@ export function ServiceCinemaReel({
       <header className={styles.reelHeader}>
         <p>DGTL 360 / SERVICE REEL</p>
         <h2 id="service-reel-title">Explore every service</h2>
-        <span>{mode === 'desktop' ? 'DRAG TO EXPLORE · CLICK A SERVICE' : 'SWIPE LEFT / RIGHT · SELECT A FRAME'}</span>
       </header>
 
       <div

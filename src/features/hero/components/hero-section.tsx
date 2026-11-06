@@ -172,9 +172,8 @@ export function HeroSection({ services }: { services: HomeService[] }) {
   }, [serviceCount]);
 
   const selectedIndex = previewIndex ?? activeIndex;
-  const activeService = services[selectedIndex];
 
-  if (!activeService || serviceCount === 0) return null;
+  if (serviceCount === 0) return null;
 
   return (
     <section
@@ -205,17 +204,6 @@ export function HeroSection({ services }: { services: HomeService[] }) {
             </span>
           </p>
 
-          <div className={styles.activeService} aria-live="polite">
-            <span className={styles.rule} />
-            <p className={styles.serviceLabel}>
-              {String(activeService.order).padStart(2, '0')} · {activeService.label}
-            </p>
-            <Link href={`/services/${activeService.slug}`}>EXPLORE THIS SERVICE ↗</Link>
-          </div>
-
-          <div className={styles.copyFooter}>
-            <a href="#enquiry">TELL US THE PROBLEM ↗</a>
-          </div>
         </div>
 
         <a className={styles.scrollCue} href="#who-we-are" onClick={(event) => {

@@ -83,7 +83,7 @@ export function EnquiryForm({ compact }: { compact: boolean }) {
         </label>
         <label className={styles.message}>
           <span>YOUR MESSAGE *</span>
-          <textarea name="message" rows={compact ? 4 : 3} placeholder=" " minLength={10} maxLength={5000} required />
+          <textarea name="message" rows={2} placeholder=" " minLength={10} maxLength={5000} required />
         </label>
         <div className={styles.honeypot} aria-hidden="true">
           <label>
